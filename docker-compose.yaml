@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+  nvidia-container-runtime:
+    container_name: nv-con-runtime
+    image: nvidia/cuda:11.0-base
+    runtime: nvidia
+    privileged: true
+
+    # devices:
+    #   # - /dev:/dev
+    #   - /dev/nvidia0:/dev/nvidia0
+    #   - /dev/nvidiactl:/dev/nvidiactl
+    #   - /dev/nvidia-caps:/dev/nvidia-caps
+    #   - /dev/nvidia-modeset:/dev/nvidia-modeset
+    #   - /dev/nvidia-uvm:/dev/nvidia-uvm
+    #   - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+    entrypoint: ["nvidia-smi"]
+
+  nvidia-container-toolkit:
+    container_name: nv-con-toolkit
+    image: nvidia/cuda:11.0-base
+    # privileged: true
+
+    devices:
+      # - /dev:/dev
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-caps:/dev/nvidia-caps
+      - /dev/nvidia-modeset:/dev/nvidia-modeset
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1 # equivalent for gpus = 1, if this is not set, gpus = all
+              capabilities: [gpu]
+    entrypoint: ["nvidia-smi"]
+
+  object-detection:
+    container_name: object-detection
+    image: mingkhoi/ubuntu-18.04-tensorrt7-tf1.15:version1.0
+    volumes:
+      - ./lib:/home/howard/object-detection/lib:rw
+      - ./data:/home/howard/collaborative-recommender/data:rw
+      - ./meta:/home/howard/collaborative-recommender/meta:rw
+      - ./container_share.log:/home/howard/container_share.log:rw
+    # runtime: nvidia
+    # privileged: true
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    devices:
+      # - /dev:/dev
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-caps:/dev/nvidia-caps
+      - /dev/nvidia-modeset:/dev/nvidia-modeset
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+    network_mode: "host"
+    # networks:
+    #   collaborative-recommender-network:
+    #     ipv4_address: 128.0.1.2
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              # count: 1
+              capabilities: [gpu]
+    # entrypoint: ["nvidia-smi"]
+    entrypoint: ["tail", "-f", "/home/howard/container_share.log"]
+
+networks:
+  collaborative-recommender-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: "128.0.2.0/24"
