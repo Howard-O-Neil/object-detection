@@ -1,6 +1,8 @@
 import numpy as np
 import tensorflow_core as tf
 
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 tf.enable_eager_execution()
 
 a = tf.constant([
