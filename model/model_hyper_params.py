@@ -2,7 +2,7 @@ learning_rate = 0.00065
 decay_rate = 0.00025 # approximately around 45 epochs
 lambda_val = 0.000065
 training_epochs = 5000 # for early stopping
-batch_size = 2
+batch_size = 30
 
 num_dense_layers = 2
 num_dense_neurons = [4096, 4096]

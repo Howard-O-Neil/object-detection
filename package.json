@@ -1,0 +1,23 @@
+{
+  "name": "object-detection",
+  "version": "1.0.0",
+  "description": "CNN model to detect objects",
+  "main": "index.js",
+  "scripts": {
+    "test_commit": "python test_github_commit.py",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Howard-O-Neil/object-detection.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Howard-O-Neil/object-detection/issues"
+  },
+  "homepage": "https://github.com/Howard-O-Neil/object-detection#readme",
+  "devDependencies": {
+    "husky": "^7.0.0"
+  }
+}
