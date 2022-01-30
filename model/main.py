@@ -46,6 +46,7 @@ y_test_one_hot = convert_to_one_hot(t_labels, len(t_names))
 y_test_one_hot_eva = convert_to_one_hot(t_labels_eva, len(t_names))
 
 ml_model = cifa10_model(MODEL_ID, "meta")
+ml_model.restore_session("")
 ml_model.init_session()
 
 try:

@@ -189,6 +189,9 @@ class cifa10_model:
 
         self.sess_saver = tf.train.Saver()
 
+    def restore_session(self, dir):
+        self.sess_saver.restore(self.sess, dir)
+
     def save_model(self):
         self.sess_saver.save(
             self.sess,
