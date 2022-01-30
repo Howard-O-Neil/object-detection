@@ -1,8 +1,10 @@
+# THIS CAN BE CODE ON NOTEBOOK
+
 import pickle
 import numpy
 import numpy as np
-from cifa10_model import cifa10_model
-import file_utils as file_utils
+from model.cifa10_model import cifa10_model
+import model.file_utils as file_utils
 
 # test local only
 import os
@@ -46,8 +48,8 @@ y_test_one_hot = convert_to_one_hot(t_labels, len(t_names))
 y_test_one_hot_eva = convert_to_one_hot(t_labels_eva, len(t_names))
 
 ml_model = cifa10_model(MODEL_ID, "meta")
-ml_model.restore_session("")
 ml_model.init_session()
+# ml_model.restore_session("")
 
 try:
     ml_model.training_loop(data, labels, y_train_one_hot, t_data_eva, t_labels_eva, y_test_one_hot_eva)

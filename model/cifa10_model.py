@@ -1,9 +1,9 @@
 from this import d
 import pandas as pd
 import tensorflow_core as tf
-import tf_preprocess_img as tf_preproc
-import model_hyper_params as mhp
-from VGG_16_model import VGG_16
+import model.tf_preprocess_img as tf_preproc
+import model.model_hyper_params as mhp
+from model.VGG_16_model import VGG_16
 import numpy as np
 from datetime import datetime
 

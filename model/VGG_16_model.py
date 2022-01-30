@@ -1,7 +1,7 @@
 import tensorflow_core as tf
 import numpy as np
-import network_components as nc
-import model_hyper_params as mhp
+import model.network_components as nc
+import model.model_hyper_params as mhp
 
 # VGG-16 model made gor grayscale images
 class VGG_16:
