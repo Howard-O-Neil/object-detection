@@ -3,7 +3,7 @@
 import pickle
 import numpy
 import numpy as np
-from model.cifa10_model import cifa10_model
+
 import model.file_utils as file_utils
 
 # test local only
@@ -46,6 +46,9 @@ def convert_to_one_hot(y_dataset, num_labels):
 y_train_one_hot = convert_to_one_hot(labels, len(names))
 y_test_one_hot = convert_to_one_hot(t_labels, len(t_names))
 y_test_one_hot_eva = convert_to_one_hot(t_labels_eva, len(t_names))
+
+
+from model.cifa10_model import cifa10_model
 
 ml_model = cifa10_model(MODEL_ID, "meta")
 ml_model.init_session()
