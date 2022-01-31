@@ -103,9 +103,11 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
+.venv/
+.venv2/
 env/
 venv/
+ven2/
 ENV/
 env.bak/
 venv.bak/
@@ -133,3 +135,4 @@ data/
 params/
 meta/
 download/
+node_modules/

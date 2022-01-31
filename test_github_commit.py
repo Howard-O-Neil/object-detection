@@ -1,4 +1,4 @@
-import model.model_hyper_params as mhp
+import model_cifa10.model_hyper_params as mhp
 
 COLAB_BATCH_SIZE = 30
 

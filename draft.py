@@ -1,3 +1,22 @@
-arr = [1, 2, 3, 4, 5]
+import tensorflow_core as tf
 
-print(arr[-1])
+tf.enable_eager_execution()
+# test local only
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+# a = tf.constant([
+#     [1, 2, 3],
+#     [4, 5, 6]
+# ])
+
+# b = tf.reduce_sum(a, 1)
+
+# print(tf.divide(a, tf.expand_dims(b, 1)).numpy())
+
+a = tf.constant([
+    [1., 2., 3.],
+    [4., 5., 6.]
+])
+
+print(tf.nn.softmax(a).numpy())

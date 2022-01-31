@@ -90,3 +90,13 @@ def scale_img(data):
     # norm = np.divide(np.subtract(grayscale_imgs, mean), std_deviation)
 
     return resized_img
+
+def convert_to_one_hot(y_dataset, num_labels):
+    y_one_hot = np.array([-99.] * num_labels)
+    for val in y_dataset:
+        one_hot = np.array(\
+            [0.] * int(val) + [1.] + [0.] * int(num_labels - val - 1))
+        
+        y_one_hot = np.vstack((y_one_hot, one_hot))
+    
+    return y_one_hot[1:] # remove first dummy

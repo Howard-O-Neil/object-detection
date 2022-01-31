@@ -1,14 +1,13 @@
 from this import d
 import pandas as pd
 import tensorflow_core as tf
-import model.tf_preprocess_img as tf_preproc
-import model.model_hyper_params as mhp
-from model.VGG_16_model import VGG_16
+import model_cifa10.tf_preprocess_img as tf_preproc
+import model_cifa10.model_hyper_params as mhp
+from model_cifa10.VGG_16_model import VGG_16
 import numpy as np
 from datetime import datetime
 
-
-class cifa10_model:
+class Model:
     def __init__(self, id, checkpoint_dir):
         self.checkpoint_dir = checkpoint_dir
         self.MODEL_ID = id
