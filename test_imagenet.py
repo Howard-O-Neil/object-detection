@@ -42,10 +42,10 @@ _, t_data, _ = file_utils.read_data(\
 from model_imagenet.model import predict_model
 import model_imagenet.tf_preprocess_img as tf_preproc
 
-predict_res = numpy.argmax(
-    predict_model.predict_on_batch(tf_preproc.tf_preprocess_images(data[5:5+16], True)),
-    1
-)
+def compute_labels(data, labels):
+    predict_res = predict_model.predict_on_batch(tf_preproc.tf_preprocess_images(data[5:5+16], True))
+    return labels[numpy.argmax(predict_res, 1)]
 
-print(labels[predict_res, 1:])
-
+def compute_probs(data):
+    predict_res = predict_model.predict_on_batch(tf_preproc.tf_preprocess_images(data[5:5+16], True))
+    return numpy.amax(predict_res, 1)
