@@ -108,4 +108,3 @@ def scale_annotations(bboxs, imgs_change_ratio):
 
         res.append(bbox)
     return res
-
