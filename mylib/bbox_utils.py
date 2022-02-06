@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 
-
 class IoU:
     pred_box = []
     gt_box = []
@@ -13,11 +12,13 @@ class IoU:
         pass
 
     def calculate(self, a, b):
+        # print(f"{a} === {b}")
         self.pred_box.append(a)
         self.gt_box.append(b)
 
         res = -1. # impossible IoU
-        if len(self.pred_box) == self.LAST_SHAPE:            
+        if len(self.pred_box) == self.LAST_SHAPE:
+
             ixmin = np.maximum(self.pred_box[0], self.gt_box[0])
             ixmax = np.minimum(
                 self.pred_box[0] + self.pred_box[2], self.gt_box[0] + self.gt_box[2]
@@ -54,7 +55,8 @@ class IoU:
 raw_iou = np.frompyfunc(IoU(4).calculate, 2, 1)
 
 def calculate_iou(pred_box, gt_box):
-    iou = np.max(raw_iou(pred_box, gt_box), axis=2)
+
+    iou = np.max(raw_iou(pred_box, gt_box), axis=len(pred_box.shape) - 1)
 
     return iou
 

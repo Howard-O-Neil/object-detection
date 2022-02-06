@@ -36,7 +36,6 @@ for i, ax in enumerate(grid):
     ss_res = bbu.selective_search(imgs[i])
     pairs = bbu.pair_bboxs_max(ss_res, img_bboxs[i])
 
-    print(pairs.shape)
     ax.set_axis_off()
     ax.imshow(imgs[i])
 
@@ -44,11 +43,11 @@ for i, ax in enumerate(grid):
     rects_2 = pairs[:, 1]
 
     for k in range(rects_1.shape[0]):
-        rect_gt = rects_2[k]
-        gt = mpatches.Rectangle((rect_gt[0], rect_gt[1]), rect_gt[2], rect_gt[3], linewidth=5, edgecolor='r', facecolor="none")
-
         rect_reg = rects_1[k]
         reg = mpatches.Rectangle((rect_reg[0], rect_reg[1]), rect_reg[2], rect_reg[3], linewidth=5, edgecolor='g', facecolor="none")
+
+        rect_gt = rects_2[k]
+        gt = mpatches.Rectangle((rect_gt[0], rect_gt[1]), rect_gt[2], rect_gt[3], linewidth=5, edgecolor='r', facecolor="none")
 
         ax.add_patch(gt)
         ax.add_patch(reg)

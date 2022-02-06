@@ -9,7 +9,7 @@ import mylib.io_utils.VOC_2012 as io_voc_2012
 
 train_list = io_voc_2012.get_imgs_dataset("train")
 
-batch_size = 100
+batch_size = 50
 
 [img_classes, img_bboxs] = io_voc_2012.get_bbox_annotations(train_list[0:batch_size])
 

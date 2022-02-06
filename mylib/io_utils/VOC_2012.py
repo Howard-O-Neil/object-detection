@@ -101,10 +101,10 @@ def scale_annotations(bboxs, imgs_change_ratio):
     res = []
     for i, bbox in enumerate(bboxs):
 
-        bbox[:, 0] *= imgs_change_ratio[i][1]
-        bbox[:, 2] *= imgs_change_ratio[i][1]
-        bbox[:, 1] *= imgs_change_ratio[i][0]
-        bbox[:, 3] *= imgs_change_ratio[i][0]
+        bbox[:, 0] *= imgs_change_ratio[i][0]
+        bbox[:, 2] *= imgs_change_ratio[i][0]
+        bbox[:, 1] *= imgs_change_ratio[i][1]
+        bbox[:, 3] *= imgs_change_ratio[i][1]
 
         res.append(bbox)
     return res

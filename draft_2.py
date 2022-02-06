@@ -8,3 +8,13 @@ a = np.array([
 
 a[:, 0] *= 5
 print(a)
+
+
+a = np.array([])
+a = np.append(a, 1)
+a = np.append(a, 1)
+a = np.append(a, 1)
+a = np.append(a, 1)
+a = np.append(a, 1)
+
+print(a)
