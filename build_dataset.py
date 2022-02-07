@@ -53,6 +53,3 @@ for k in range(full_batch):
     DF_inputy.to_csv(f"data/pascal_voc2012/bbox_Y{k}.csv")
 
     print(f"===== DONE BATCH {k} =====")
-
-    if k == 1:
-        break

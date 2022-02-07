@@ -31,10 +31,6 @@ for file in os.listdir(os.getenv("dataset")):
     else:
         list_imgs.append(file)
 
-print(list_x)
-print(list_y)
-print(list_imgs)
-
 list_x_DF = []
 for k in range(0, len(list_x)):
     df = pd.read_csv(f"""{os.getenv("dataset")}/bbox_X{k}.csv""")

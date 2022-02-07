@@ -18,9 +18,9 @@ y_DF = pd.read_csv(f"""{os.getenv("dataset2")}/bbox_Y_MERGED.csv""")
 imgs_DF = pd.read_csv(f"""{os.getenv("dataset2")}/image_ID_MERGED.csv""")
 
 # batch_size = len(trainval_list) # construct dataset from full list
-batch_size = 50
-
-trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[0:batch_size])
+batch_size = 25                    
+start_idx = 30
+trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[start_idx:start_idx+batch_size])
 
 x_DF = np.array(x_DF.values.tolist()).astype(np.int32)[:, 1:]
 y_DF = np.array(y_DF.values.tolist()).astype(np.int32)[:, 1:]
@@ -31,7 +31,7 @@ from mpl_toolkits.axes_grid1 import ImageGrid
 # plot canvas (DCI 2K) = (256 x 8, 135 x 8)
 fig = plt.figure(figsize=(256., 135.), dpi=8) 
 
-grid_row = int(trainval_list.shape[0] / 10)
+grid_row = int(trainval_list.shape[0] / 5)
 grid_col = int(trainval_list.shape[0] / grid_row)
 grid = ImageGrid(fig, 111,
                  nrows_ncols=(grid_row, grid_col),  # creates 2x2 grid of axes
