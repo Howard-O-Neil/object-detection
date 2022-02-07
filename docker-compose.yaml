@@ -42,7 +42,7 @@ services:
 
   object-detection:
     container_name: object-detection
-    image: mingkhoi/ubuntu-18.04-tensorrt7-tf1.15:version1.0
+    image: mingkhoi/ubuntu-18.04-tensorrt8-tf2.6:version1.0
     volumes:
       - ./lib:/home/howard/object-detection/lib:rw
       - ./data:/home/howard/collaborative-recommender/data:rw
