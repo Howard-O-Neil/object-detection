@@ -44,10 +44,10 @@ services:
     container_name: object-detection
     image: mingkhoi/ubuntu-18.04-tensorrt8-tf2.6:version1.0
     volumes:
-      - ./lib:/home/howard/object-detection/lib:rw
-      - ./data:/home/howard/collaborative-recommender/data:rw
-      - ./meta:/home/howard/collaborative-recommender/meta:rw
+      - ./data:/home/howard/object-detection/data:rw
+      - ./meta:/home/howard/object-detection/meta:rw
       - ./container_share.log:/home/howard/container_share.log:rw
+      - ./src:/home/howard/object-detection/src:rw
     # runtime: nvidia
     # privileged: true
     environment:
@@ -76,8 +76,8 @@ services:
     entrypoint: ["tail", "-f", "/home/howard/container_share.log"]
 
 networks:
-  collaborative-recommender-network:
+  object-detection-network:
     ipam:
       driver: default
       config:
-        - subnet: "128.0.2.0/24"
+        - subnet: "128.0.3.0/24"

@@ -19,4 +19,4 @@ model.compile()
 x = tf.ones((3, 3))
 y = model(x)
 
-# print(y.numpy())
+print(y.numpy())
