@@ -5,7 +5,7 @@ import mylib.io_utils.VOC_2012 as io_VOC_2012
 import mylib.img_utils as imu
 import logging
 import os
-
+import PIL
 
 class Kaming_he_dense(keras.layers.Layer):
     fan_in = 2  # default, make no change to variables
@@ -214,9 +214,48 @@ class Bbox_predict:
     def load_model(self):
         self.model.load_weights(self.model_path)
 
+    def predict_bboxs(self, img_dir, bboxs):
+        if len(bboxs.shape) <= 1:
+            bboxs = np.expand_dims(bboxs, axis=0)
+
+        batch_size = 16
+        total_batch = bboxs.shape[0] // batch_size + 1
+
+        # img_dir = img_dir.decode("utf-8")
+        img_tensor = tf.cast(
+            tf.convert_to_tensor(np.asarray(PIL.Image.open(img_dir))),
+            tf.dtypes.float32,
+        )
+        scale_img = tf.image.resize(
+            img_tensor, [500, 500], method="bilinear", preserve_aspect_ratio=True
+        ).numpy()
+
+        if bboxs.shape[0] % batch_size == 0:
+            total_batch -= 1
+        
+        new_bboxs = np.array([])
+        for i in range(total_batch):
+            offset = (i * batch_size) % bboxs.shape[0]
+            
+            sub_bboxs = bboxs[offset:offset+batch_size]
+            img_bboxs = imu.extract_bboxs(scale_img, sub_bboxs)
+
+            compute_bboxs = self.model(self.img_cnn_model(img_bboxs), training=False).numpy()
+            generate_bboxs = np.copy(sub_bboxs)
+            generate_bboxs[:, 0] = np.add(np.multiply(sub_bboxs[:, 2], compute_bboxs[:, 0]), sub_bboxs[:, 0])
+            generate_bboxs[:, 1] = np.add(np.multiply(sub_bboxs[:, 3], compute_bboxs[:, 1]), sub_bboxs[:, 1])
+            generate_bboxs[:, 2] = np.multiply(sub_bboxs[:, 2], np.exp(compute_bboxs[:, 2]))
+            generate_bboxs[:, 3] = np.multiply(sub_bboxs[:, 3], np.exp(compute_bboxs[:, 3]))
+            
+            if len(new_bboxs.shape) <= 1:
+                new_bboxs = generate_bboxs
+            else: new_bboxs = np.concatenate((new_bboxs, generate_bboxs), axis=0)
+
+        return new_bboxs
+
     def train_loop(self, transfer=False):
         if transfer: self.load_model()
-        
+
         dataset = tf.data.Dataset.from_tensor_slices(self.list_imgs)
         validate_dataset = tf.data.Dataset.from_tensor_slices(self.list_imgs_validation)
 
