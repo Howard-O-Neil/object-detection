@@ -19,8 +19,7 @@ x_DF = np.array(x_DF.values.tolist()).astype(np.float32)[:, 1:]
 y_DF = np.array(y_DF.values.tolist()).astype(np.float32)[:, 1:]
 imgs_DF = np.array(imgs_DF.values.tolist())[:, 1]
 
-db_size = 30
-trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[0:db_size])
+trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval"))
 
 split_index = int(trainval_list.shape[0] * 0.8)
 train_list = trainval_list[0:split_index]
@@ -42,6 +41,6 @@ except KeyboardInterrupt:
     bbox_model.save_model()
 
     print("===== SAVE MODEL SUCCESSFULLY =====")
-    exit(1)
+    exit(0)
 else:
     print("UNKNOWN ERROR!!!")

@@ -39,14 +39,4 @@ bbox_model.assign_img_list_train(train_list)
 bbox_model.assign_img_list_validation(val_list)
 bbox_model.assign_bbox_dataset(x_DF, y_DF, imgs_DF)
 
-try:
-    bbox_model.train_loop()
-
-# Google Colab support throw KeyboardInterrupt error when interupt kernel
-except KeyboardInterrupt:
-    bbox_model.save_model()
-
-    print("===== SAVE MODEL SUCCESSFULLY =====")
-    exit(1)
-else:
-    print("UNKNOWN ERROR!!!")
+bbox_model.train_loop()
