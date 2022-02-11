@@ -45,7 +45,7 @@ for i, ax in enumerate(fig.get_axes()):
     # display image
     #       float   [0 ... 1]
     #       integer [0 ... 255]
-    ax.imshow(imgs[i] / 255.)
+    ax.imshow(imgs[i])
 
     rects_1 = pairs[:, 0]
     rects_2 = pairs[:, 1]

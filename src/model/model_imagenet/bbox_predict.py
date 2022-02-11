@@ -214,25 +214,12 @@ class Bbox_predict:
     def load_model(self):
         self.model.load_weights(self.model_path)
 
-    def predict_bboxs(self, img_dir, bboxs):
+    def predict_bboxs(self, scale_img, bboxs):
         if len(bboxs.shape) <= 1:
             bboxs = np.expand_dims(bboxs, axis=0)
 
         batch_size = 16
         total_batch = bboxs.shape[0] // batch_size + 1
-
-        # img_dir = img_dir.decode("utf-8")
-        img_tensor = tf.cast(
-            tf.convert_to_tensor(np.asarray(PIL.Image.open(img_dir))),
-            tf.dtypes.float32,
-        )
-        scale_img = tf.tile(
-            tf.image.rgb_to_grayscale(
-                tf.image.resize(
-                    img_tensor, [500, 500], method="bilinear", preserve_aspect_ratio=True
-                )
-            ), [1, 1, 3]
-        )
 
         if bboxs.shape[0] % batch_size == 0:
             total_batch -= 1

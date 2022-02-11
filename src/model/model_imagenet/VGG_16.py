@@ -18,21 +18,12 @@ class Pretrain_VGG16:
     def get_model(self):
         return self.VGG_16_model
 
-    def predict_scores(self, img_dir, bboxs):
+    def predict_scores(self, scale_img, bboxs):
         if len(bboxs.shape) <= 1:
             bboxs = np.expand_dims(bboxs, axis=0)
 
         batch_size = 16
         total_batch = bboxs.shape[0] // batch_size + 1
-
-        # img_dir = img_dir.decode("utf-8")
-        img_tensor = tf.cast(
-            tf.convert_to_tensor(np.asarray(PIL.Image.open(img_dir))),
-            tf.dtypes.float32,
-        )
-        scale_img = tf.image.resize(
-            img_tensor, [500, 500], method="bilinear", preserve_aspect_ratio=True
-        ).numpy()
 
         if bboxs.shape[0] % batch_size == 0:
             total_batch -= 1

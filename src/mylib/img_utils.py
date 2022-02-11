@@ -1,5 +1,7 @@
 import tensorflow as tf
 import numpy as np
+import PIL
+import tensorflow.keras.applications.vgg16 as pretrain_vgg
 
 
 def extract_bbox(img, bbox):
@@ -15,6 +17,26 @@ def extract_bbox(img, bbox):
     return tf.image.resize(
         img_tensor, [224, 224], method="bilinear", preserve_aspect_ratio=False
     ).numpy()
+
+
+def imagenet_load(img_dirs):
+    res = []
+
+    for img_dir in img_dirs:
+        img_tensor = tf.cast(
+            tf.convert_to_tensor(np.asarray(PIL.Image.open(img_dir))),
+            tf.dtypes.float32,
+        )
+        scale_img = tf.image.resize(
+            pretrain_vgg.preprocess_input(img_tensor),
+            [500, 500],
+            method="bilinear",
+            preserve_aspect_ratio=True,
+        ).numpy()
+
+        res.append(scale_img)
+
+    return res
 
 
 def extract_bboxs(img, bboxs):
