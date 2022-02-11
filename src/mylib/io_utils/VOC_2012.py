@@ -77,7 +77,6 @@ def scale_imgs(img_strs):
         annotations_dir = os.path.join(parent_dir, f"Annotations/{img_str}.xml")
         image_dir = os.path.join(parent_dir, f"JPEGImages/{img_str}.jpg")
 
-        print(image_dir)
         tree = ET.ElementTree(file=annotations_dir)
 
         original_w = np.float32(tree.find("size").find("width").text)

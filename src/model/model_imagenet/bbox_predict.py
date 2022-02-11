@@ -31,7 +31,6 @@ class Kaming_he_dense(keras.layers.Layer):
         self.b = tf.Variable(b_init, dtype=tf.float32, trainable=True)
 
     def call(self, inputs, training=True):
-        print(training)
         regularized_loss = tf.math.multiply(
             self._lambda, tf.reduce_sum(tf.square(tf.nn.bias_add(self.w, self.b)))
         )
@@ -87,12 +86,16 @@ class Bbox_predict:
         self.logger.setLevel(logging.INFO)
 
         handler = logging.FileHandler(os.getenv("log_path"), mode="w")
+        stream_handler = logging.StreamHandler()
+        
         formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            "%(asctime)s - %(levelname)s - %(message)s"
         )
         handler.setFormatter(formatter)
+        stream_handler.setFormatter(formatter)
 
         self.logger.addHandler(handler)
+        self.logger.addHandler(stream_handler)
 
     def assign_img_list_train(self, list_imgs):
         self.list_imgs = list_imgs
@@ -133,7 +136,8 @@ class Bbox_predict:
         loss = tf.reduce_mean(tf.reduce_min(loss, axis=1))
         return loss
 
-    @tf.function  # pure Tensor operations, no numpy
+    @tf.function(experimental_relax_shapes=True)
+    # pure Tensor operations, no numpy
     def train_step(self, train_batch_x, train_batch_y, train_batch_img):
         with tf.GradientTape() as tape:
             feature_maps = self.img_cnn_model(train_batch_img)
@@ -152,7 +156,8 @@ class Bbox_predict:
 
         return loss
 
-    @tf.function  # pure Tensor operations, no numpy
+    @tf.function(experimental_relax_shapes=True)
+    # pure Tensor operations, no numpy
     def validate_step(self, train_batch_x, train_batch_y, train_batch_img):
         feature_maps = self.img_cnn_model(train_batch_img)
         bbox_predicts = self.model(feature_maps, training=False)
@@ -202,7 +207,6 @@ class Bbox_predict:
             loss = callback(train_batch_x, train_batch_y, train_batch_img).numpy()
 
             self.logger.info(f"{prefix_str} EPOCH_ID: {epoch_id}, BATCH LOSS: {loss}")
-            # print(f"MODEL WEIGHT = {np.sum(self.model.layers[0].weights[0])}")
 
     def train_loop(self):
         dataset = tf.data.Dataset.from_tensor_slices(self.list_imgs)
