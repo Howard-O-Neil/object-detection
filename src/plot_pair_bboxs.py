@@ -16,7 +16,7 @@ start_idx = 30
 trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[start_idx:start_idx+batch_size])
 
 [img_classes, img_bboxs] = io_voc_2012.get_bbox_annotations(trainval_list)
-[imgs, imgs_change_ratio] = io_voc_2012.scale_imgs(trainval_list)
+[imgs, imgs_change_ratio] = io_voc_2012.transform_imgs(trainval_list)
 img_bboxs = io_voc_2012.scale_annotations(img_bboxs, imgs_change_ratio)
 
 # BELOW CODE IS PRETTY SLOW

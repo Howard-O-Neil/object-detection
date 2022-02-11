@@ -44,7 +44,7 @@ print("==========================")
 for i, ax in enumerate(fig.get_axes()):
     img_id = trainval_list[i]
     filter_ids = np.where(imgs_DF == img_id, True, False)
-    [imgs, _] = io_voc_2012.scale_imgs([img_id])
+    [imgs, _] = io_voc_2012.transform_imgs([img_id])
 
     ax.set_axis_off()
 

@@ -21,7 +21,7 @@ train_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[start_idx:start_i
 # for x in img_classes:
 #     print(x)
 
-[imgs, imgs_change_ratio] = io_voc_2012.scale_imgs(train_list)
+[imgs, imgs_change_ratio] = io_voc_2012.transform_imgs(train_list)
 
 img_bboxs = io_voc_2012.scale_annotations(img_bboxs, imgs_change_ratio)
 

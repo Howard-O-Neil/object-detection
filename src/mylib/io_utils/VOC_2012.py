@@ -3,6 +3,7 @@ import xml.etree.cElementTree as ET
 import numpy as np
 import tensorflow as tf
 import PIL
+import tensorflow.keras.applications.vgg16 as pretrain_vgg
 
 CATEGORIES = [
     "aeroplane",
@@ -68,7 +69,7 @@ def get_bbox_annotations(img_strs):
     return [img_classes, img_bboxs]
 
 
-def scale_imgs(img_strs):
+def transform_imgs(img_strs):
     imgs = []
     imgs_change_ratio = []
 
@@ -86,9 +87,8 @@ def scale_imgs(img_strs):
             tf.convert_to_tensor(np.asarray(PIL.Image.open(image_dir))),
             tf.dtypes.float32,
         )
-        # img_tensor = tf.divide(img_tensor, 255.0)
         scale_img = tf.image.resize(
-            img_tensor, [500, 500], method="bilinear", preserve_aspect_ratio=True
+            pretrain_vgg.preprocess_input(img_tensor), [500, 500], method="bilinear", preserve_aspect_ratio=True
         ).numpy()
 
         ratio_w = np.divide(scale_img.shape[1], original_w)

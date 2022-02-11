@@ -40,4 +40,4 @@ bbox_model.assign_img_list_train(train_list)
 bbox_model.assign_img_list_validation(val_list)
 bbox_model.assign_bbox_dataset(x_DF, y_DF, imgs_DF)
 
-bbox_model.train_loop()
+bbox_model.train_loop(transfer=True)

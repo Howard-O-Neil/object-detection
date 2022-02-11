@@ -67,10 +67,12 @@ scores = vgg_16.predict_scores(img_path, boxes[0:100])
 print(scores)
 print(scores.shape)
 
-# new_boxes = bbox_model.predict_bboxs(img_path, boxes)
-# plt.imshow(scale_img / 255.)
-# for i, rect in enumerate(new_boxes):
-#     r = mpatches.Rectangle((rect[0], rect[1]), rect[2], rect[3], linewidth=1, edgecolor='r', facecolor="none")
-#     ax.add_patch(r)
+fig, ax = plt.subplots(1)
 
-# plt.savefig(f"""{os.getenv("plot")}/test_ss_2.png""")
+new_boxes = bbox_model.predict_bboxs(img_path, boxes)
+plt.imshow(scale_img / 255.)
+for i, rect in enumerate(new_boxes):
+    r = mpatches.Rectangle((rect[0], rect[1]), rect[2], rect[3], linewidth=1, edgecolor='r', facecolor="none")
+    ax.add_patch(r)
+
+plt.savefig(f"""{os.getenv("plot")}/test_ss_2.png""")

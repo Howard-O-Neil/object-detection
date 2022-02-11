@@ -175,7 +175,7 @@ class Bbox_predict:
 
         for img in batch_train:
             img = img.decode("utf-8")
-            [imgs, _] = io_VOC_2012.scale_imgs([img])
+            [imgs, _] = io_VOC_2012.transform_imgs([img])
 
             filter_ids = np.where(self.imgs_df == img, True, False)
 
@@ -226,9 +226,13 @@ class Bbox_predict:
             tf.convert_to_tensor(np.asarray(PIL.Image.open(img_dir))),
             tf.dtypes.float32,
         )
-        scale_img = tf.image.resize(
-            img_tensor, [500, 500], method="bilinear", preserve_aspect_ratio=True
-        ).numpy()
+        scale_img = tf.tile(
+            tf.image.rgb_to_grayscale(
+                tf.image.resize(
+                    img_tensor, [500, 500], method="bilinear", preserve_aspect_ratio=True
+                )
+            ), [1, 1, 3]
+        )
 
         if bboxs.shape[0] % batch_size == 0:
             total_batch -= 1

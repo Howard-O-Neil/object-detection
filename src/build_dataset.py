@@ -24,7 +24,7 @@ for k in range(full_batch):
     offset = k * batch_size
 
     [img_classes, img_bboxs] = io_voc_2012.get_bbox_annotations(trainval_list[offset:offset + batch_size])
-    [imgs, imgs_change_ratio] = io_voc_2012.scale_imgs(trainval_list[offset:offset + batch_size])
+    [imgs, imgs_change_ratio] = io_voc_2012.transform_imgs(trainval_list[offset:offset + batch_size])
     img_bboxs = io_voc_2012.scale_annotations(img_bboxs, imgs_change_ratio)
 
     subdata = np.array([])
@@ -36,7 +36,8 @@ for k in range(full_batch):
         if len(subdata.shape) <= 1:
             subdata = pairs
         else: subdata = np.concatenate((subdata, pairs), axis=0)
-
+        
+        print(trainval_list[offset + i])
         for u in range(pairs.shape[0]):
             imgs_ids = np.append(imgs_ids, trainval_list[offset + i])
 

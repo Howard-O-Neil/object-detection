@@ -30,7 +30,7 @@ y_DF = np.array(y_DF.values.tolist()).astype(np.int32)[:, 1:]
 imgs_DF = np.array(imgs_DF.values.tolist())[:, 1]
 
 img_id = trainval_list[0]
-[imgs, _] = io_voc_2012.scale_imgs([img_id])
+[imgs, _] = io_voc_2012.transform_imgs([img_id])
 
 filter_ids = np.where(imgs_DF == img_id, True, False)
 
