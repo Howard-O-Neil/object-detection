@@ -8,3 +8,7 @@ c = tf.constant([1, 2, 9, 4, 5])
 stack = tf.stack([a, b, c], axis=1)
 print(stack.numpy()) 
 print(stack[:, 1])
+
+
+a = np.array([])
+print(a[0])

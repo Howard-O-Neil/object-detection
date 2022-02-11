@@ -46,7 +46,7 @@ class Pretrain_VGG16:
 
             compute_labels = np.max(self.VGG_16_model.predict_on_batch(img_bboxs), axis=1) 
 
-            if len(predictions.shape) <= 1:
+            if predictions.shape[0] <= 0:
                 predictions = compute_labels
             else: predictions = np.concatenate((predictions, compute_labels), axis=0)
 
