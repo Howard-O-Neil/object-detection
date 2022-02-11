@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import mylib.io_utils.VOC_2012 as io_voc_2012
 import mylib.bbox_utils as bbu
-
+import mylib.img_utils as imu
 import pandas as pd
 
 trainval_list = io_voc_2012.get_imgs_dataset("trainval")
@@ -39,17 +39,13 @@ for k in range(full_batch):
 
         for u in range(pairs.shape[0]):
             imgs_ids = np.append(imgs_ids, trainval_list[offset + i])
-    
-    # if len(data.shape) <= 1:
-    #     data = subdata
-    # else: data = np.concatenate((data, subdata), axis=0)
 
     DF_imgids = pd.DataFrame(imgs_ids)
-    DF_imgids.to_csv(f"data/pascal_voc2012/image_ID{k}.csv")
+    DF_imgids.to_csv(f"../data/pascal_voc2012/image_ID{k}.csv")
 
     DF_inputx = pd.DataFrame(subdata[:, 0])
     DF_inputy = pd.DataFrame(subdata[:, 1])
-    DF_inputx.to_csv(f"data/pascal_voc2012/bbox_X{k}.csv")
-    DF_inputy.to_csv(f"data/pascal_voc2012/bbox_Y{k}.csv")
+    DF_inputx.to_csv(f"../data/pascal_voc2012/bbox_X{k}.csv")
+    DF_inputy.to_csv(f"../data/pascal_voc2012/bbox_Y{k}.csv")
 
     print(f"===== DONE BATCH {k} =====")

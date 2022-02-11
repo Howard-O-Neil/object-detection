@@ -34,15 +34,21 @@ fig = plt.figure(figsize=(256., 135.), dpi=8)
 
 grid_row = int(train_list.shape[0] / 5)
 grid_col = int(train_list.shape[0] / grid_row)
-grid = ImageGrid(fig, 111,
-                 nrows_ncols=(grid_row, grid_col),  # creates 2x2 grid of axes
-                 axes_pad=0.01,  # pad between axes in inch.
-                 )
+# grid = ImageGrid(fig, 111,
+#                  nrows_ncols=(grid_row, grid_col),  # creates 2x2 grid of axes
+#                  axes_pad=0.01,  # pad between axes in inch.
+#                  )
+
+grid = fig.subplots(grid_row, grid_col)
 
 print("==========================")
-for i, ax in enumerate(grid):
+for i, ax in enumerate(fig.get_axes()):
     ax.set_axis_off()
-    ax.imshow(imgs[i])
+
+    # display image
+    #       float   [0 ... 1]
+    #       integer [0 ... 255]
+    ax.imshow(imgs[i] / 255.)
 
     rects = img_bboxs[i]
 
@@ -50,4 +56,4 @@ for i, ax in enumerate(grid):
         r = mpatches.Rectangle((rect[0], rect[1]), rect[2], rect[3], linewidth=5, edgecolor='r', facecolor="none")
         ax.add_patch(r)
 
-plt.savefig("images/plot/test_bbox.png")
+plt.savefig("../images/plot/test_bbox.png")

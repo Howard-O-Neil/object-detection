@@ -25,21 +25,27 @@ from mpl_toolkits.axes_grid1 import ImageGrid
 
 # plot canvas (DCI 2K) = (256 x 8, 135 x 8)
 fig = plt.figure(figsize=(256., 135.), dpi=8) 
+fig.tight_layout()
 
 grid_row = int(trainval_list.shape[0] / 5)
 grid_col = int(trainval_list.shape[0] / grid_row)
-grid = ImageGrid(fig, 111,
-                 nrows_ncols=(grid_row, grid_col),  # creates 2x2 grid of axes
-                 axes_pad=0.01,  # pad between axes in inch.
-                 )
+# grid = ImageGrid(fig, 111,
+#                  nrows_ncols=(grid_row, grid_col),  # creates 2x2 grid of axes
+#                  axes_pad=0.01,  # pad between axes in inch.
+#                  )
+grid = fig.subplots(grid_row, grid_col)
 
 print("==========================")
-for i, ax in enumerate(grid):
+for i, ax in enumerate(fig.get_axes()):
     ss_res = bbu.selective_search(imgs[i])
     pairs = bbu.pair_bboxs_max(ss_res, img_bboxs[i])
 
     ax.set_axis_off()
-    ax.imshow(imgs[i])
+    ax.autoscale_view('tight')
+    # display image
+    #       float   [0 ... 1]
+    #       integer [0 ... 255]
+    ax.imshow(imgs[i] / 255.)
 
     rects_1 = pairs[:, 0]
     rects_2 = pairs[:, 1]
@@ -54,4 +60,4 @@ for i, ax in enumerate(grid):
         ax.add_patch(gt)
         ax.add_patch(reg)
 
-plt.savefig("images/plot/test_pair_regions.png")
+plt.savefig("../images/plot/test_pair_regions.png")

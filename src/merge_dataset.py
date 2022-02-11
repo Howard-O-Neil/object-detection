@@ -59,6 +59,6 @@ for k in range(0, len(list_imgs)):
 imgs_DF = pd.concat(list_imgs_DF, axis=0)
 imgs_DF.reset_index(drop=True, inplace=True)
 
-imgs_DF.to_csv(f"data/pascal_voc2012/image_ID_MERGED.csv")
-x_DF.to_csv(f"data/pascal_voc2012/bbox_X_MERGED.csv")
-y_DF.to_csv(f"data/pascal_voc2012/bbox_Y_MERGED.csv")
+imgs_DF.to_csv(f"../data/pascal_voc2012/image_ID_MERGED.csv")
+x_DF.to_csv(f"../data/pascal_voc2012/bbox_X_MERGED.csv")
+y_DF.to_csv(f"../data/pascal_voc2012/bbox_Y_MERGED.csv")

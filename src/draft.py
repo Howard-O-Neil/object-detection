@@ -1,19 +1,10 @@
 import numpy as np
+import tensorflow as tf
 
-a = np.array([
-    [1, 2, 3, 4],
-    [1, 2, 3, 4]
-])
+a = tf.constant([1, 2, 3, 4, 5])
+b = tf.constant([1, 5, 3, 4, 5])
+c = tf.constant([1, 2, 9, 4, 5])
 
-b = np.array([
-    [1,2,3,4],
-    [1,2,3,4],
-    [1,2,3,4],
-    [1,2,3,4],
-])
-
-# throw error
-res = np.concatenate((np.expand_dims(a, 0), np.expand_dims(b, 0)), axis=0)
-
-print(res)
-
+stack = tf.stack([a, b, c], axis=1)
+print(stack.numpy()) 
+print(stack[:, 1])

@@ -18,12 +18,12 @@ y_DF = pd.read_csv(f"""{os.getenv("dataset2")}/bbox_Y_MERGED.csv""")
 imgs_DF = pd.read_csv(f"""{os.getenv("dataset2")}/image_ID_MERGED.csv""")
 
 # batch_size = len(trainval_list) # construct dataset from full list
-batch_size = 25                    
+batch_size = 25
 start_idx = 30
 trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[start_idx:start_idx+batch_size])
 
-x_DF = np.array(x_DF.values.tolist()).astype(np.int32)[:, 1:]
-y_DF = np.array(y_DF.values.tolist()).astype(np.int32)[:, 1:]
+x_DF = np.array(x_DF.values.tolist()).astype(np.float32)[:, 1:]
+y_DF = np.array(y_DF.values.tolist()).astype(np.float32)[:, 1:]
 imgs_DF = np.array(imgs_DF.values.tolist())[:, 1]
 
 from mpl_toolkits.axes_grid1 import ImageGrid
@@ -33,20 +33,25 @@ fig = plt.figure(figsize=(256., 135.), dpi=8)
 
 grid_row = int(trainval_list.shape[0] / 5)
 grid_col = int(trainval_list.shape[0] / grid_row)
-grid = ImageGrid(fig, 111,
-                 nrows_ncols=(grid_row, grid_col),  # creates 2x2 grid of axes
-                 axes_pad=0.01,  # pad between axes in inch.
-                 )
+# grid = ImageGrid(fig, 111,
+#                  nrows_ncols=(grid_row, grid_col),  # creates 2x2 grid of axes
+#                  axes_pad=0.01,  # pad between axes in inch.
+#                  )
+grid = fig.subplots(grid_row, grid_col)
 
 
 print("==========================")
-for i, ax in enumerate(grid):
+for i, ax in enumerate(fig.get_axes()):
     img_id = trainval_list[i]
     filter_ids = np.where(imgs_DF == img_id, True, False)
     [imgs, _] = io_voc_2012.scale_imgs([img_id])
 
     ax.set_axis_off()
-    ax.imshow(imgs[0])
+
+    # display image
+    #       float   [0 ... 1]
+    #       integer [0 ... 255]
+    ax.imshow(imgs[0] / 255.)
 
     rects_1 = x_DF[filter_ids]
     rects_2 = y_DF[filter_ids]
@@ -61,4 +66,4 @@ for i, ax in enumerate(grid):
         ax.add_patch(gt)
         ax.add_patch(reg)
 
-plt.savefig("images/plot/test_pair_regions_csv.png")
+plt.savefig("../images/plot/test_pair_regions_csv.png")

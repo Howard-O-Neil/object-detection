@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-import VGG_16
+from model.model_imagenet import VGG_16
 
 # input_1 = img_model.get_layer("input_1")
 
@@ -33,10 +33,10 @@ import VGG_16
 
 class CNN_core(VGG_16.Pretrain_VGG16):
     def __init__(self):
+        super(CNN_core, self).__init__()
         img_model = self.VGG_16_model
         self.img_cnn = keras.Sequential(
             [
-                img_model.get_layer("input_1"),
                 img_model.get_layer("block1_conv1"),
                 img_model.get_layer("block1_conv2"),
                 img_model.get_layer("block1_pool"),
@@ -60,6 +60,10 @@ class CNN_core(VGG_16.Pretrain_VGG16):
                 img_model.get_layer("fc2")
             ]
         )
+
+        for layer in self.img_cnn.layers:
+            layer.trainable = False
+        
         self.img_cnn.compile()
     
     def get_model(self):
