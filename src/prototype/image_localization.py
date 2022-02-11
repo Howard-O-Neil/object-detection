@@ -63,7 +63,7 @@ for i, rect in enumerate(boxes):
 plt.savefig(f"""{os.getenv("plot")}/test_ss_1.png""")
 
 print(boxes.shape)
-scores = vgg_16.predict_scores(img_path, boxes[0:1])
+scores = vgg_16.predict_scores(img_path, boxes[0:10])
 print(scores)
 print(scores.shape)
 

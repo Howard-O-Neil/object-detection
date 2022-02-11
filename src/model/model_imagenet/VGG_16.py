@@ -44,7 +44,7 @@ class Pretrain_VGG16:
             sub_bboxs = bboxs[offset:offset+batch_size]
             img_bboxs = imu.extract_bboxs(scale_img, sub_bboxs)
 
-            compute_labels = np.max(self.VGG_16_model(img_bboxs).numpy(), axis=1)
+            compute_labels = np.max(self.VGG_16_model.predict_on_batch(img_bboxs), axis=1) 
 
             if len(predictions.shape) <= 1:
                 predictions = compute_labels
