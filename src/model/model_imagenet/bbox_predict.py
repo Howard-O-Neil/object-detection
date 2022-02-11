@@ -208,7 +208,15 @@ class Bbox_predict:
 
             self.logger.info(f"{prefix_str} EPOCH_ID: {epoch_id}, BATCH LOSS: {loss}")
 
-    def train_loop(self):
+    def save_model(self):
+        self.model.save_weights(self.model_path)
+
+    def load_model(self):
+        self.model.load_weights(self.model_path)
+
+    def train_loop(self, transfer=False):
+        if transfer: self.load_model()
+        
         dataset = tf.data.Dataset.from_tensor_slices(self.list_imgs)
         validate_dataset = tf.data.Dataset.from_tensor_slices(self.list_imgs_validation)
 
@@ -226,4 +234,4 @@ class Bbox_predict:
                     "[VALIDATION]", e, batch_train.numpy(), 16, self.validate_step
                 )
 
-        self.model.save_weights(self.model_path)
+        self.save_model()
