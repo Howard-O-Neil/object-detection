@@ -56,8 +56,8 @@ class CNN_core(VGG_16.Pretrain_VGG16):
                 img_model.get_layer("block5_conv3"),
                 img_model.get_layer("block5_pool"),
                 img_model.get_layer("flatten"),
-                img_model.get_layer("fc1"),
-                img_model.get_layer("fc2")
+                # img_model.get_layer("fc1"),
+                # img_model.get_layer("fc2")
             ]
         )
 
