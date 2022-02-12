@@ -97,6 +97,8 @@ class Bbox_predict:
         self.logger.addHandler(handler)
         self.logger.addHandler(stream_handler)
 
+        self.train_batch_size = int(os.getenv("train_batch_size"))
+
     def assign_img_list_train(self, list_imgs):
         self.list_imgs = list_imgs
 

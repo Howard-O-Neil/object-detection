@@ -6,6 +6,8 @@ os.environ["dataset2"] = "/home/howard/project/object-detection/data/pascal_voc2
 os.environ["model_path"] = f"/home/howard/project/object-detection/meta/r_cnn/model{MODEL_ID}"
 os.environ["log_path"] = "/home/howard/project/object-detection/log/train.log"
 
+os.environ["train_batch_size"] = "32"
+
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
