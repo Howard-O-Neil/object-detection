@@ -193,9 +193,9 @@ class Bbox_predict:
 
         for img in batch_train:
             img = img.decode("utf-8")
-            img = os.getenv("dataset") + f"/JPEGImages/{img}.jpg"
-            [imgs] = imu.imagenet_load([img])
+            img_dir = os.getenv("dataset") + f"/JPEGImages/{img}.jpg"
 
+            imgs = imu.imagenet_load([img_dir])
             filter_ids = np.where(self.imgs_df == img, True, False)
 
             propose = self.propose_regions[filter_ids]
