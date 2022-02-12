@@ -263,7 +263,7 @@ class Bbox_predict:
             shuffle_ds = dataset.shuffle(buffer_size=800).batch(self.img_batch_size)
             for _, batch_train in enumerate(shuffle_ds):
                 self.enumerate_batch(
-                    "[TRAINING]", e, batch_train.numpy(), 16, self.train_step
+                    "[TRAINING]", e, batch_train.numpy(), self.train_batch_size, self.train_step
                 )
 
             validation_batch = validate_dataset.batch(self.img_batch_size)
@@ -272,7 +272,7 @@ class Bbox_predict:
             for _, batch_train in enumerate(validation_batch):
                 total_val_batch += 1
                 mean_loss += self.enumerate_batch(
-                    "[VALIDATION]", e, batch_train.numpy(), 16, self.validate_step, is_log=False
+                    "[VALIDATION]", e, batch_train.numpy(), self.train_batch_size, self.validate_step, is_log=False
                 )
 
             self.logger.info(f"[ === VALIDATION === ] LOSS: {mean_loss / total_val_batch}")
