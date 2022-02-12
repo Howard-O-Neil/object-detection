@@ -57,7 +57,7 @@ class Bbox_predict:
 
     img_batch_size = 1
     train_batch_size = 16
-    _lambda = 100.0
+    _lambda = 1000.0
     epochs = 50
 
     def __init__(self, version=1):
@@ -67,19 +67,19 @@ class Bbox_predict:
                 Kaming_he_dense(2048, self._lambda, dropout_rate=0.45),
                 Kaming_he_dense(1024, self._lambda, dropout_rate=0.35),
                 Kaming_he_dense(1024, self._lambda, dropout_rate=0.35),
-                Kaming_he_dense(1024, self._lambda, dropout_rate=0.35),
-                Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
-                Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
-                Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
-                Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
-                Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
-                Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+                # Kaming_he_dense(1024, self._lambda, dropout_rate=0.35),
+                # Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
+                # Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
+                # Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
+                # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+                # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+                # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
                 Kaming_he_dense(4, self._lambda, activation=False),
             ]
         )
         self.model.build((None, 4096))
 
-        self.optimizer = keras.optimizers.SGD(learning_rate=0.000001, momentum=0.9)
+        self.optimizer = keras.optimizers.SGD(learning_rate=0.0000001, momentum=0.9)
         self.model_path = f"""{os.getenv("model_path")}/model{version}"""
 
         self.logger = logging.getLogger("r-cnn logger")
@@ -169,7 +169,7 @@ class Bbox_predict:
         return loss
 
     def enumerate_batch(
-        self, prefix_str, epoch_id, batch_train, train_batch_size, callback
+        self, prefix_str, epoch_id, batch_train, train_batch_size, callback, is_log = True
     ):
         batch_x = np.array([])
         batch_y = np.array([])
@@ -199,6 +199,7 @@ class Bbox_predict:
         if batch_x.shape[0] % train_batch_size == 0:
             total_train_batch -= 1
 
+        mean_loss = 0.
         for k in range(total_train_batch):
             offset = (k * train_batch_size) % batch_x.shape[0]
 
@@ -207,8 +208,12 @@ class Bbox_predict:
             train_batch_img = batch_img[offset : offset + train_batch_size]
 
             loss = callback(train_batch_x, train_batch_y, train_batch_img).numpy()
+            mean_loss += loss
 
-            self.logger.info(f"{prefix_str} EPOCH_ID: {epoch_id}, BATCH LOSS: {loss}")
+            if is_log:
+                self.logger.info(f"{prefix_str} EPOCH_ID: {epoch_id}, BATCH LOSS: {loss}")
+
+        return mean_loss / total_train_batch
 
     def save_model(self):
         self.model.save_weights(self.model_path)
@@ -261,9 +266,14 @@ class Bbox_predict:
                 )
 
             validation_batch = validate_dataset.batch(self.img_batch_size)
+            mean_loss = 0.
+            total_val_batch = 0
             for _, batch_train in enumerate(validation_batch):
-                self.enumerate_batch(
-                    "[VALIDATION]", e, batch_train.numpy(), 16, self.validate_step
+                total_val_batch += 1
+                mean_loss += self.enumerate_batch(
+                    "[VALIDATION]", e, batch_train.numpy(), 16, self.validate_step, is_log=False
                 )
+
+            self.logger.info(f"[ === VALIDATION === ] LOSS: {mean_loss / total_val_batch}")
 
         self.save_model()
