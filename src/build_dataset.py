@@ -1,5 +1,6 @@
 import os
 os.environ["dataset"] = "/home/howard/dataset/VOCdevkit/VOC2012"
+os.environ["dataset2"] = "/home/howard/project/object-detection/data/pascal_voc2012/dataset_v2"
 
 import tensorflow as tf
 import numpy as np
@@ -31,7 +32,10 @@ for k in range(full_batch):
     imgs_ids = np.array([])
     for i in range(len(img_bboxs)):
         ss_res = bbu.selective_search(imgs[i])
-        pairs = bbu.pair_bboxs_max(ss_res, img_bboxs[i])
+        pairs = bbu.pair_bboxs_max(ss_res, img_bboxs[i], filter_rate=0.4)
+
+        if pairs.shape[0] <= 0:
+            continue
 
         if len(subdata.shape) <= 1:
             subdata = pairs
@@ -41,12 +45,15 @@ for k in range(full_batch):
         for u in range(pairs.shape[0]):
             imgs_ids = np.append(imgs_ids, trainval_list[offset + i])
 
+    if subdata.shape[0] <= 0:
+        continue
+
     DF_imgids = pd.DataFrame(imgs_ids)
-    DF_imgids.to_csv(f"../data/pascal_voc2012/image_ID{k}.csv")
+    DF_imgids.to_csv(f"""{os.getenv("dataset2")}/image_ID{k}.csv""")
 
     DF_inputx = pd.DataFrame(subdata[:, 0])
     DF_inputy = pd.DataFrame(subdata[:, 1])
-    DF_inputx.to_csv(f"../data/pascal_voc2012/bbox_X{k}.csv")
-    DF_inputy.to_csv(f"../data/pascal_voc2012/bbox_Y{k}.csv")
+    DF_inputx.to_csv(f"""{os.getenv("dataset2")}/bbox_X{k}.csv""")
+    DF_inputy.to_csv(f"""{os.getenv("dataset2")}/bbox_Y{k}.csv""")
 
     print(f"===== DONE BATCH {k} =====")

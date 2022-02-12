@@ -36,7 +36,7 @@ val_list = trainval_list[split_index:trainval_list.shape[0]]
 
 image_cnn_core = icnn.CNN_core().get_model()
 
-bbox_model = bbp.Bbox_predict(version=1)
+bbox_model = bbp.Bbox_predict()
 bbox_model.assign_cnn_model(image_cnn_core)
 bbox_model.assign_img_list_train(train_list)
 bbox_model.assign_img_list_validation(val_list)

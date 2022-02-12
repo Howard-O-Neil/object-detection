@@ -67,10 +67,13 @@ class Bbox_predict:
                 Kaming_he_dense(4096, self._lambda, dropout_rate=0.45),
                 Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
                 Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
-                # Kaming_he_dense(1024, self._lambda, dropout_rate=0.35),
-                # Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
-                # Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
-                # Kaming_he_dense(512, self._lambda, dropout_rate=0.25),
+                Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
+                # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+                # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+                # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+                # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
+                # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
+                # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
                 # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
                 # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
                 # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
@@ -113,7 +116,38 @@ class Bbox_predict:
     def assign_cnn_model(self, cnn_model):
         self.img_cnn_model = cnn_model
 
-    def loss_fn(self, train_batch_x, train_batch_y, predictions):
+    # loss function base on first approach
+    # calculating the tranlation of the box relative to current size
+    #   for example: moving x by 0.5w
+    # this is the original R-CNN proposal method
+    def loss_fn_aprch1(self, train_batch_x, train_batch_y, predictions):
+        gt_x = train_batch_y[:, 0]
+        gt_y = train_batch_y[:, 1]
+        gt_w = train_batch_y[:, 2]
+        gt_h = train_batch_y[:, 3]
+
+        propose_x = train_batch_x[:, 0]
+        propose_y = train_batch_x[:, 1]
+        propose_w = train_batch_x[:, 2]
+        propose_h = train_batch_x[:, 3]
+
+        tx = tf.math.divide(tf.math.subtract(gt_x, propose_x), propose_w)
+        ty = tf.math.divide(tf.math.subtract(gt_y, propose_y), propose_h)
+        tw = tf.math.log(tf.math.divide(gt_w, propose_w))
+        th = tf.math.log(tf.math.divide(gt_h, propose_h))
+
+        lx = tf.math.subtract(tx, predictions[:, 0])
+        ly = tf.math.subtract(ty, predictions[:, 1])
+        lw = tf.math.subtract(tw, predictions[:, 2])
+        lh = tf.math.subtract(th, predictions[:, 3])
+
+        loss = tf.math.square(tf.stack([lx, ly, lw, lh], axis=1))
+        loss = tf.reduce_mean(tf.reduce_min(loss, axis=1))
+        return loss
+
+    # loss function base on 2nd approach
+    # propose the actual x, y, w, h by 4 neurons
+    def loss_fn_aprch2(self, train_batch_x, train_batch_y, predictions):
         gt_x = train_batch_y[:, 0]
         gt_y = train_batch_y[:, 1]
         gt_w = train_batch_y[:, 2]
@@ -145,7 +179,7 @@ class Bbox_predict:
             feature_maps = self.img_cnn_model(train_batch_img)
             bbox_predicts = self.model(feature_maps, training=True)
 
-            loss = self.loss_fn(train_batch_x, train_batch_y, bbox_predicts)
+            loss = self.loss_fn_aprch1(train_batch_x, train_batch_y, bbox_predicts)
 
             total_regularized_loss = tf.constant(0.0)
             for reg_loss in self.model.losses:
@@ -164,7 +198,7 @@ class Bbox_predict:
         feature_maps = self.img_cnn_model(train_batch_img)
         bbox_predicts = self.model(feature_maps, training=False)
 
-        loss = self.loss_fn(train_batch_x, train_batch_y, bbox_predicts)
+        loss = self.loss_fn_aprch1(train_batch_x, train_batch_y, bbox_predicts)
 
         return loss
 

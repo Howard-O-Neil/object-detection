@@ -1,15 +1,24 @@
-import numpy as np
-import tensorflow as tf
-
-a = tf.constant([1, 2, 3, 4, 5])
-b = tf.constant([1, 5, 3, 4, 5])
-c = tf.constant([1, 2, 9, 4, 5])
-
-stack = tf.stack([a, b, c], axis=1)
-print(stack.numpy()) 
-print(stack[:, 1])
-
-print(a[0])
+from functools import cmp_to_key
 
 
-print(0. / 0.000000001)
+imgs = ["za", "abcd", "zz", "zc", "bb05", "bb01"]
+
+def compare_path(item1: str, item2: str):
+    return_value = 1
+
+    if len(item1) > len(item2):
+        return_value = 1
+    elif len(item1) < len(item2):
+        return_value = -1
+    else:
+        if item1 > item2:
+            return_value = 1
+        elif item1 < item2:
+            return_value = -1
+        else:
+            return_value = 0
+
+    return return_value
+
+imgs.sort(key=cmp_to_key(compare_path))
+print(imgs)

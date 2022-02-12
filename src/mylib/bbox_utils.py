@@ -110,6 +110,9 @@ def pair_bboxs_max(ss_res, gt, filter_rate=0.5):
 
     filter_idx = np.where(max_iou_each_region >= np.float32(filter_rate))
 
+    if ss_res[filter_idx].shape[0] <= 0:
+        return np.array([])
+
     return np.concatenate((
         np.expand_dims(ss_res[filter_idx], axis=1),
         np.expand_dims(gt[max_iou_region_id[filter_idx]], axis=1)
