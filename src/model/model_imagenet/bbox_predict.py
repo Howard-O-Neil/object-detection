@@ -147,39 +147,20 @@ class Bbox_predict:
 
     # loss function base on 2nd approach
     # propose the actual x, y, w, h by 4 neurons
-    def loss_fn_aprch2(self, train_batch_x, train_batch_y, predictions):
-        gt_x = train_batch_y[:, 0]
-        gt_y = train_batch_y[:, 1]
-        gt_w = train_batch_y[:, 2]
-        gt_h = train_batch_y[:, 3]
-
-        propose_x = train_batch_x[:, 0]
-        propose_y = train_batch_x[:, 1]
-        propose_w = train_batch_x[:, 2]
-        propose_h = train_batch_x[:, 3]
-
-        tx = tf.math.divide(tf.math.subtract(gt_x, propose_x), propose_w)
-        ty = tf.math.divide(tf.math.subtract(gt_y, propose_y), propose_h)
-        tw = tf.math.log(tf.math.divide(gt_w, propose_w))
-        th = tf.math.log(tf.math.divide(gt_h, propose_h))
-
-        lx = tf.math.subtract(tx, predictions[:, 0])
-        ly = tf.math.subtract(ty, predictions[:, 1])
-        lw = tf.math.subtract(tw, predictions[:, 2])
-        lh = tf.math.subtract(th, predictions[:, 3])
-
-        loss = tf.math.square(tf.stack([lx, ly, lw, lh], axis=1))
-        loss = tf.reduce_mean(tf.reduce_min(loss, axis=1))
-        return loss
+    def loss_fn_aprch2(self, train_batch_y, predictions):
+        return tf.reduce_mean(tf.math.square(
+            tf.math.subtract(train_batch_y, predictions)
+        ))
 
     @tf.function(experimental_relax_shapes=True)
     # pure Tensor operations, no numpy
-    def train_step(self, train_batch_x, train_batch_y, train_batch_img):
+    def train_step(self, train_batch_y, train_batch_img):
         with tf.GradientTape() as tape:
             feature_maps = self.img_cnn_model(train_batch_img)
             bbox_predicts = self.model(feature_maps, training=True)
 
-            loss = self.loss_fn_aprch1(train_batch_x, train_batch_y, bbox_predicts)
+            # loss = self.loss_fn_aprch1(train_batch_x, train_batch_y, bbox_predicts)
+            loss = self.loss_fn_aprch2(train_batch_y, bbox_predicts)
 
             total_regularized_loss = tf.constant(0.0)
             for reg_loss in self.model.losses:
@@ -194,24 +175,26 @@ class Bbox_predict:
 
     @tf.function(experimental_relax_shapes=True)
     # pure Tensor operations, no numpy
-    def validate_step(self, train_batch_x, train_batch_y, train_batch_img):
+    def validate_step(self, train_batch_y, train_batch_img):
         feature_maps = self.img_cnn_model(train_batch_img)
         bbox_predicts = self.model(feature_maps, training=False)
 
-        loss = self.loss_fn_aprch1(train_batch_x, train_batch_y, bbox_predicts)
+        # loss = self.loss_fn_aprch1(train_batch_x, train_batch_y, bbox_predicts)
+        loss = self.loss_fn_aprch2(train_batch_y, bbox_predicts)
 
         return loss
 
     def enumerate_batch(
         self, prefix_str, epoch_id, batch_train, train_batch_size, callback, is_log = True
     ):
-        batch_x = np.array([])
+        # batch_x = np.array([])
         batch_y = np.array([])
         batch_img = np.array([])
 
         for img in batch_train:
             img = img.decode("utf-8")
-            [imgs, _] = io_VOC_2012.transform_imgs([img])
+            img = os.getenv("dataset") + f"/JPEGImages/{img}.jpg"
+            [imgs] = imu.imagenet_load([img])
 
             filter_ids = np.where(self.imgs_df == img, True, False)
 
@@ -219,29 +202,30 @@ class Bbox_predict:
             gt = self.ground_truth_bbbox[filter_ids]
             img_bboxs = imu.extract_bboxs(imgs[0], propose)
 
-            if batch_x.shape[0] <= 0:
-                batch_x = propose
+            if batch_y.shape[0] <= 0:
+                # batch_x = propose
                 batch_y = gt
                 batch_img = img_bboxs
             else:
-                batch_x = np.concatenate((batch_x, propose), axis=0)
+                # batch_x = np.concatenate((batch_x, propose), axis=0)
                 batch_y = np.concatenate((batch_y, gt), axis=0)
                 batch_img = np.concatenate((batch_img, img_bboxs), axis=0)
 
-        total_train_batch = batch_x.shape[0] // train_batch_size + 1
+        total_train_batch = batch_y.shape[0] // train_batch_size + 1
 
-        if batch_x.shape[0] % train_batch_size == 0:
+        if batch_y.shape[0] % train_batch_size == 0:
             total_train_batch -= 1
 
         mean_loss = 0.
         for k in range(total_train_batch):
-            offset = (k * train_batch_size) % batch_x.shape[0]
+            offset = (k * train_batch_size) % batch_y.shape[0]
 
-            train_batch_x = batch_x[offset : offset + train_batch_size]
+            # train_batch_x = batch_x[offset : offset + train_batch_size]
             train_batch_y = batch_y[offset : offset + train_batch_size]
             train_batch_img = batch_img[offset : offset + train_batch_size]
 
-            loss = callback(train_batch_x, train_batch_y, train_batch_img).numpy()
+            # loss = callback(train_batch_x, train_batch_y, train_batch_img).numpy()
+            loss = callback(train_batch_y, train_batch_img).numpy()
             mean_loss += loss
 
             if is_log:

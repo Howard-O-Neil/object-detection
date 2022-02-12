@@ -2,7 +2,7 @@ from functools import cmp_to_key
 import os
 from cv2 import sort
 
-os.environ["dataset_version"] = "/home/howard/project/object-detection/data/pascal_voc2012/dataset_v1"
+os.environ["dataset_version"] = "/home/howard/project/object-detection/data/pascal_voc2012/dataset_v2"
 
 import tensorflow as tf
 import numpy as np
