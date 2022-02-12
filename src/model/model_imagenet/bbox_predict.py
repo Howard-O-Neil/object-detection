@@ -77,9 +77,9 @@ class Bbox_predict:
                 Kaming_he_dense(4, self._lambda, activation=False),
             ]
         )
-        self.model.build((None, 4096))
+        self.model.build((None, 25088))
 
-        self.optimizer = keras.optimizers.SGD(learning_rate=0.0000001, momentum=0.9)
+        self.optimizer = keras.optimizers.SGD(learning_rate=0.00000001, momentum=0.9)
         self.model_path = f"""{os.getenv("model_path")}/model{version}"""
 
         self.logger = logging.getLogger("r-cnn logger")
