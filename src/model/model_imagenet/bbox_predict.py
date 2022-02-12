@@ -194,7 +194,7 @@ class Bbox_predict:
                 batch_y = np.concatenate((batch_y, gt), axis=0)
                 batch_img = np.concatenate((batch_img, img_bboxs), axis=0)
 
-        print(batch_x.shape[0])
+        # print(batch_x.shape[0])
         total_train_batch = batch_x.shape[0] // train_batch_size + 1
 
         if batch_x.shape[0] % train_batch_size == 0:
