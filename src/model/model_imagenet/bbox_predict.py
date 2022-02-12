@@ -60,7 +60,7 @@ class Bbox_predict:
     _lambda = 1000.0
     epochs = 50
 
-    def __init__(self, version=1):
+    def __init__(self):
         self.model = keras.Sequential(
             [
                 Kaming_he_dense(4096, self._lambda, dropout_rate=0.45),
@@ -80,7 +80,7 @@ class Bbox_predict:
         self.model.build((None, 25088))
 
         self.optimizer = keras.optimizers.SGD(learning_rate=0.00000001, momentum=0.9)
-        self.model_path = f"""{os.getenv("model_path")}/model{version}"""
+        self.model_path = f"""{os.getenv("model_path")}/checkpoint"""
 
         self.logger = logging.getLogger("r-cnn logger")
         self.logger.setLevel(logging.INFO)
@@ -194,7 +194,6 @@ class Bbox_predict:
                 batch_y = np.concatenate((batch_y, gt), axis=0)
                 batch_img = np.concatenate((batch_img, img_bboxs), axis=0)
 
-        self.logger.info(f"[ERROR] {batch_x.shape[0]}")
         total_train_batch = batch_x.shape[0] // train_batch_size + 1
 
         if batch_x.shape[0] % train_batch_size == 0:
@@ -214,7 +213,7 @@ class Bbox_predict:
             if is_log:
                 self.logger.info(f"{prefix_str} EPOCH_ID: {epoch_id}, BATCH LOSS: {loss}")
 
-        return mean_loss / total_train_batch
+        return mean_loss / (total_train_batch + 0.000000001)
 
     def save_model(self):
         self.model.save_weights(self.model_path)

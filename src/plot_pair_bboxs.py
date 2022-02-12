@@ -14,6 +14,7 @@ batch_size = 25
 start_idx = 30
 
 trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[start_idx:start_idx+batch_size])
+# trainval_list = np.array(["2007_001872", "2007_002896", "2007_006028", "2007_006254", "2007_007772"])
 
 [img_classes, img_bboxs] = io_voc_2012.get_bbox_annotations(trainval_list)
 [imgs, imgs_change_ratio] = io_voc_2012.transform_imgs(trainval_list)

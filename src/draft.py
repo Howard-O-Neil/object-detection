@@ -9,6 +9,7 @@ stack = tf.stack([a, b, c], axis=1)
 print(stack.numpy()) 
 print(stack[:, 1])
 
-
-a = np.array([])
 print(a[0])
+
+
+print(0. / 0.000000001)
