@@ -58,11 +58,11 @@ class Bbox_predict:
     img_batch_size = 1
     train_batch_size = 16
     _lambda = 0.05
-    epochs = 50
 
     def __init__(self):
         self.train_batch_size = int(os.getenv("train_batch_size"))
         self._lambda = float(os.getenv("lambda"))
+        self.epochs = int(os.getenv("epoch"))
 
         self.model = keras.Sequential(
             [

@@ -12,6 +12,7 @@ os.environ["log_path"] = "/home/howard/project/object-detection/log/train.log"
 os.environ["train_batch_size"] = "32"
 os.environ["lambda"] = "0.05"
 os.environ["learning_rate"] = "0.0001"
+os.environ["epoch"] = "1"
 
 import numpy as np
 import tensorflow as tf

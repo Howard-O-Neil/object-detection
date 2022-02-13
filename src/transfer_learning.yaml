@@ -39,7 +39,7 @@ EPOCH 1
     os.environ["train_batch_size"] = "32"
     os.environ["lambda"] = "0.00005"
     os.environ["learning_rate"] = "0.000000001"
-
+    
     self.model = keras.Sequential(
         [
             Kaming_he_dense(4096, self._lambda, dropout_rate=0.35),
