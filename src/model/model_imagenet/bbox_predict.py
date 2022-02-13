@@ -66,11 +66,11 @@ class Bbox_predict:
 
         self.model = keras.Sequential(
             [
-                Kaming_he_dense(4096, self._lambda, dropout_rate=0.45),
-                Kaming_he_dense(4096, self._lambda, dropout_rate=0.45),
-                Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
-                Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
-                Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
+                Kaming_he_dense(4096, self._lambda, dropout_rate=0.35),
+                Kaming_he_dense(4096, self._lambda, dropout_rate=0.35),
+                Kaming_he_dense(2048, self._lambda, dropout_rate=0.25),
+                Kaming_he_dense(2048, self._lambda, dropout_rate=0.25),
+                Kaming_he_dense(2048, self._lambda, dropout_rate=0.25),
                 # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
                 # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
                 # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
