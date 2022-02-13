@@ -103,6 +103,8 @@ class Bbox_predict:
         self.logger.addHandler(handler)
         self.logger.addHandler(stream_handler)
 
+    def reset_params(self):
+        self.__init__()
 
     def assign_img_list_train(self, list_imgs):
         self.list_imgs = list_imgs
