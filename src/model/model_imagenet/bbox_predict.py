@@ -86,7 +86,8 @@ class Bbox_predict:
         self.model.build((None, 25088))
 
         self.optimizer = keras.optimizers.SGD(learning_rate=float(os.getenv("learning_rate")), momentum=0.9)
-        self.model_path = f"""{os.getenv("model_path")}/checkpoint"""
+        self.model_save_path = f"""{os.getenv("model_path")}/checkpoint"""
+        self.model_load_path = f"""{os.getenv("transfer_path")}/checkpoint"""
 
         self.logger = logging.getLogger("r-cnn logger")
         self.logger.setLevel(logging.INFO)
@@ -238,10 +239,10 @@ class Bbox_predict:
         return mean_loss / (total_train_batch + 0.000000001)
 
     def save_model(self):
-        self.model.save_weights(self.model_path)
+        self.model.save_weights(self.model_save_path)
 
     def load_model(self):
-        self.model.load_weights(self.model_path)
+        self.model.load_weights(self.model_load_path)
 
     def predict_bboxs(self, scale_img, bboxs):
         if len(bboxs.shape) <= 1:

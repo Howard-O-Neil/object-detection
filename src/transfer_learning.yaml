@@ -1,0 +1,61 @@
+EPOCH 0
+
+    os.environ["train_batch_size"] = "32"
+    os.environ["lambda"] = "0.0005"
+    os.environ["learning_rate"] = "0.000000001"
+
+    self.model = keras.Sequential(
+        [
+            Kaming_he_dense(4096, self._lambda, dropout_rate=0.45),
+            Kaming_he_dense(4096, self._lambda, dropout_rate=0.45),
+            Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
+            Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
+            Kaming_he_dense(2048, self._lambda, dropout_rate=0.35),
+            # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+            # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+            # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+            # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
+            # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
+            # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
+            # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+            # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+            # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+            Kaming_he_dense(4, self._lambda, activation=False),
+        ]
+    )
+
+    Results
+        """
+            The model training loss stuck at 28 - 32
+                mean training loss      = 47162.74438183878
+                mean validation loss    = 2.000987408729341
+            
+            The result is not quite good, but this can make a good initial weights
+            Further transfer learning with reduced regularization would benefit
+        """
+
+EPOCH 1
+
+    os.environ["train_batch_size"] = "32"
+    os.environ["lambda"] = "0.00005"
+    os.environ["learning_rate"] = "0.000000001"
+
+    self.model = keras.Sequential(
+        [
+            Kaming_he_dense(4096, self._lambda, dropout_rate=0.35),
+            Kaming_he_dense(4096, self._lambda, dropout_rate=0.35),
+            Kaming_he_dense(2048, self._lambda, dropout_rate=0.25),
+            Kaming_he_dense(2048, self._lambda, dropout_rate=0.25),
+            Kaming_he_dense(2048, self._lambda, dropout_rate=0.25),
+            # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+            # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+            # Kaming_he_dense(1024, self._lambda, dropout_rate=0.25),
+            # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
+            # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
+            # Kaming_he_dense(512, self._lambda, dropout_rate=0.2),
+            # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+            # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+            # Kaming_he_dense(256, self._lambda, dropout_rate=0.15),
+            Kaming_he_dense(4, self._lambda, activation=False),
+        ]
+    )

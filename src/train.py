@@ -1,9 +1,12 @@
 import os
 
 MODEL_ID = 1
+TRANSFER_ID = 1
+
 os.environ["dataset"] = "/home/howard/dataset/VOCdevkit/VOC2012"
 os.environ["dataset2"] = "/home/howard/project/object-detection/data/pascal_voc2012/dataset_v2"
 os.environ["model_path"] = f"/home/howard/project/object-detection/meta/r_cnn/model{MODEL_ID}"
+os.environ["transfer_path"] = f"/home/howard/project/object-detection/meta/r_cnn/model{TRANSFER_ID}"
 os.environ["log_path"] = "/home/howard/project/object-detection/log/train.log"
 
 os.environ["train_batch_size"] = "32"
