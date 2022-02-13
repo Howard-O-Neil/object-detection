@@ -141,7 +141,7 @@ class Bbox_predict:
         lw = tf.reduce_sum(tf.math.square(tf.math.subtract(tw, predictions[:, 2])))
         lh = tf.reduce_sum(tf.math.square(tf.math.subtract(th, predictions[:, 3])))
 
-        loss = tf.reduce_mean(tf.constant([lx, ly, lw, lh]))
+        loss = tf.reduce_mean(tf.stack([lx, ly, lw, lh]))
 
         return loss
 
