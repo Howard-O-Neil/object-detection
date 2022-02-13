@@ -57,7 +57,7 @@ class Bbox_predict:
 
     img_batch_size = 1
     train_batch_size = 16
-    _lambda = 1000.0
+    _lambda = 25.
     epochs = 50
 
     def __init__(self):
@@ -82,7 +82,7 @@ class Bbox_predict:
         )
         self.model.build((None, 25088))
 
-        self.optimizer = keras.optimizers.SGD(learning_rate=0.00000001, momentum=0.9)
+        self.optimizer = keras.optimizers.SGD(learning_rate=0.000001, momentum=0.9)
         self.model_path = f"""{os.getenv("model_path")}/checkpoint"""
 
         self.logger = logging.getLogger("r-cnn logger")
@@ -257,15 +257,10 @@ class Bbox_predict:
             img_bboxs = imu.extract_bboxs(scale_img, sub_bboxs)
 
             compute_bboxs = self.model(self.img_cnn_model(img_bboxs), training=False).numpy()
-            generate_bboxs = np.copy(sub_bboxs)
-            generate_bboxs[:, 0] = np.add(np.multiply(sub_bboxs[:, 2], compute_bboxs[:, 0]), sub_bboxs[:, 0])
-            generate_bboxs[:, 1] = np.add(np.multiply(sub_bboxs[:, 3], compute_bboxs[:, 1]), sub_bboxs[:, 1])
-            generate_bboxs[:, 2] = np.multiply(sub_bboxs[:, 2], np.exp(compute_bboxs[:, 2]))
-            generate_bboxs[:, 3] = np.multiply(sub_bboxs[:, 3], np.exp(compute_bboxs[:, 3]))
             
             if len(new_bboxs.shape) <= 1:
-                new_bboxs = generate_bboxs
-            else: new_bboxs = np.concatenate((new_bboxs, generate_bboxs), axis=0)
+                new_bboxs = compute_bboxs
+            else: new_bboxs = np.concatenate((new_bboxs, compute_bboxs), axis=0)
 
         return new_bboxs
 
