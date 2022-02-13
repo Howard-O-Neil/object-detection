@@ -57,10 +57,13 @@ class Bbox_predict:
 
     img_batch_size = 1
     train_batch_size = 16
-    _lambda = 2.5
+    _lambda = 0.05
     epochs = 50
 
     def __init__(self):
+        self.train_batch_size = int(os.getenv("train_batch_size"))
+        self._lambda = float(os.getenv("lambda"))
+
         self.model = keras.Sequential(
             [
                 Kaming_he_dense(4096, self._lambda, dropout_rate=0.45),
@@ -82,7 +85,7 @@ class Bbox_predict:
         )
         self.model.build((None, 25088))
 
-        self.optimizer = keras.optimizers.SGD(learning_rate=0.00000001, momentum=0.9)
+        self.optimizer = keras.optimizers.Adam(learning_rate=float(os.getenv("learning_rate")))
         self.model_path = f"""{os.getenv("model_path")}/checkpoint"""
 
         self.logger = logging.getLogger("r-cnn logger")
@@ -100,7 +103,6 @@ class Bbox_predict:
         self.logger.addHandler(handler)
         self.logger.addHandler(stream_handler)
 
-        self.train_batch_size = int(os.getenv("train_batch_size"))
 
     def assign_img_list_train(self, list_imgs):
         self.list_imgs = list_imgs

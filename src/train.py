@@ -6,7 +6,9 @@ os.environ["dataset2"] = "/home/howard/project/object-detection/data/pascal_voc2
 os.environ["model_path"] = f"/home/howard/project/object-detection/meta/r_cnn/model{MODEL_ID}"
 os.environ["log_path"] = "/home/howard/project/object-detection/log/train.log"
 
-os.environ["train_batch_size"] = "8"
+os.environ["train_batch_size"] = "32"
+os.environ["lambda"] = "0.05"
+os.environ["learning_rate"] = "0.0001"
 
 import numpy as np
 import tensorflow as tf
@@ -27,7 +29,7 @@ x_DF = np.array(x_DF.values.tolist()).astype(np.float32)[:, 1:]
 y_DF = np.array(y_DF.values.tolist()).astype(np.float32)[:, 1:]
 imgs_DF = np.array(imgs_DF.values.tolist())[:, 1]
 
-db_size = 30
+db_size = 15
 trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[0:db_size])
 
 split_index = int(trainval_list.shape[0] * 0.8)
