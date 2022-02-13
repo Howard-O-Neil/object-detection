@@ -85,7 +85,7 @@ class Bbox_predict:
         )
         self.model.build((None, 25088))
 
-        self.optimizer = keras.optimizers.Adam(learning_rate=float(os.getenv("learning_rate")))
+        self.optimizer = keras.optimizers.SGD(learning_rate=float(os.getenv("learning_rate")), momentum=0.9)
         self.model_path = f"""{os.getenv("model_path")}/checkpoint"""
 
         self.logger = logging.getLogger("r-cnn logger")
