@@ -1,9 +1,8 @@
 # object-detection
 ## Description
-I tried to replicate the R-CNN approach in the original paper but deploy a few changes
+I tried to replicate the FAST R-CNN approach in the original paper but deploy a few changes
 + Make use of pre-trained VGG-16 on imagenet
-+ Keep the softmax layer instead of using SVM
-+ Keep 1000 output label instead of (1000 + 1, with an additional neuron for detecting background)
++ Keep the softmax layer with 1000 output label instead of (1000 + 1, with an additional neuron for detecting background)
 + Deploy regression model, which implement deep-learning bounding box regression (5 dense layers) with no activation function
 + Calculate regression loss by calculating SSE of each prediction by 4 output neurons (dx, dy, dw, dh). The result will be the mean value of 4 SSEs
 
