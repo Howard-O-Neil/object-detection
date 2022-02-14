@@ -1,6 +1,6 @@
 # object-detection
 ## Description
-I tried to replicate the FAST R-CNN approach in the original paper but deploy a few changes
+I tried to replicate the R-CNN approach in the original paper but deploy a few changes
 + Make use of pre-trained VGG-16 on imagenet
 + Keep the softmax layer with 1000 output label instead of (1000 + 1, with an additional neuron for detecting background)
 + Deploy regression model, which implement deep-learning bounding box regression (5 dense layers) with no activation function
