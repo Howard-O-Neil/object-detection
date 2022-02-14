@@ -35,10 +35,15 @@ class Pretrain_VGG16:
             sub_bboxs = bboxs[offset:offset+batch_size]
             img_bboxs = imu.extract_bboxs(scale_img, sub_bboxs)
 
-            compute_labels = np.max(self.VGG_16_model.predict_on_batch(img_bboxs), axis=1) 
+            computed_features = self.VGG_16_model.predict_on_batch(img_bboxs)
+
+            compute_labels = np.argmax(compute_labels, axis=1).astype(np.float32)
+            compute_scores = np.max(computed_features, axis=1).astype(np.float32)
+
+            compute_res = np.stack((compute_labels, compute_scores), axis=1)
 
             if predictions.shape[0] <= 0:
-                predictions = compute_labels
-            else: predictions = np.concatenate((predictions, compute_labels), axis=0)
+                predictions = compute_res
+            else: predictions = np.concatenate((predictions, compute_res), axis=0)
 
         return predictions
