@@ -13,6 +13,8 @@ I tried to replicate the R-CNN approach in the original paper but deploy a few c
 
 The above example is pretty easy, but this result is also easier to inspect than all others which i have experimented.
 
-Because we only predict by 1000 labels (object label only), the model doesn't seem to be able to filter the real ground-truth object with the background stuffs.
+Because we only predict by 1000 labels (object label only), the model doesn't seem to be able to filter the real ground-truth object with the background stuffs. I can say that the model is
++ Good at image classification tasks
++ Bad at localization tasks (Unable to give bad score on background)
 
 I'll keep develop this in another branch, where i'll deploy MobileNet pretrained model instead of VGG-16, with additional model for detecting background/object.
