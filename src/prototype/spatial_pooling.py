@@ -7,7 +7,7 @@ import PIL
 
 img_dir = "/home/howard/project/object-detection/images/test/animal_2.jpg"
 
-perfect_size = 9 # (7*7)
+perfect_size = 45  # 7 + 1
 
 img = tf.expand_dims(
     tf.cast(tf.convert_to_tensor(np.asarray(PIL.Image.open(img_dir))), tf.float32),
@@ -32,29 +32,42 @@ img_h = img[0].shape[0]
 
 # print((new_h, new_w))
 
-bin_w = 7
-bin_h = 7
+bin_w = 40
+bin_h = 40
 
-_pool_size = (math.floor(img_h / bin_h), math.floor(img_w / bin_w))
-_pool_stride = (math.floor(img_h / bin_h), math.floor(img_w / bin_w))
+window_h = math.ceil(img_h / bin_h)
+window_w = math.ceil(img_w / bin_w)
 
-print(f"Pool size   : {_pool_size}")
-print(f"Pool stride : {_pool_stride}")
-max_pool = keras.layers.MaxPooling2D(pool_size=_pool_size, strides=_pool_stride)
+pad_h = ((window_h * bin_h) - img_h + 1) / 2
+pad_w = ((window_w * bin_w) - img_w + 1) / 2
 
-maxpool_img = max_pool(img)
+_pool_size_stride = (window_h, window_w)
+
+pad_img = keras.layers.ZeroPadding2D(
+    padding=(
+        (math.ceil(pad_h), math.floor(pad_h)),
+        (math.ceil(pad_w), math.floor(pad_w)),
+    )
+)(img)
+
+max_pool = keras.layers.MaxPooling2D(
+    pool_size=_pool_size_stride, strides=_pool_size_stride
+)
+
+maxpool_img = max_pool(pad_img)
 print(img.shape)
 print(maxpool_img.shape)
 
 # plot canvas (DCI 2K) = (256 x 8, 135 x 8)
-fig = plt.figure(figsize=(256., 135.), dpi=8)
+fig = plt.figure(figsize=(256.0, 135.0), dpi=8)
 
 grid_row = 1
-grid_col = 2
+grid_col = 3
 
 grid = fig.subplots(grid_row, grid_col)
 
-fig.get_axes()[0].imshow(img[0].numpy() / 255.)
-fig.get_axes()[1].imshow(maxpool_img[0].numpy() / 255.)
+fig.get_axes()[0].imshow(img[0].numpy() / 255.0)
+fig.get_axes()[1].imshow(pad_img[0].numpy() / 255.0)
+fig.get_axes()[2].imshow(maxpool_img[0].numpy() / 255.0)
 
 plt.savefig("/home/howard/project/object-detection/images/plot/test_maxpool_img.png")

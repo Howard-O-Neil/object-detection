@@ -12,13 +12,11 @@ def spatial_pooling_4x4(img):
     bin_w = 4
     bin_h = 4
 
-    _pool_size = (math.floor(img_h / bin_h), math.floor(img_w / bin_w))
-    _pool_stride = (math.floor(img_h / bin_h), math.floor(img_w / bin_w))
+    _pool_size_stride = (math.floor(img_h / bin_h), math.floor(img_w / bin_w))
 
-    max_pool = keras.layers.MaxPooling2D(pool_size=_pool_size, strides=_pool_stride)
+    max_pool = keras.layers.MaxPooling2D(pool_size=_pool_size_stride, strides=_pool_size_stride)
 
     return max_pool(img)
-
 
 def construct_conv_model():
     model = keras.applications.MobileNetV2(
@@ -34,8 +32,7 @@ def construct_conv_model():
 
     return model
 
-
-img_dir = "/home/howard/project/object-detection/images/test/animal_4.jpg"
+img_dir = "/home/howard/project/object-detection/images/test/animal_3.jpg"
 
 perfect_size = 512  # (7*7)
 
@@ -58,8 +55,10 @@ else:
 img = tf.image.resize(img, [new_h, new_w], preserve_aspect_ratio=False)
 
 conv_model = construct_conv_model()
-output_img = spatial_pooling_4x4(
-    conv_model(keras.applications.mobilenet_v2.preprocess_input(img)).numpy()) 
+feature_map = conv_model(keras.applications.mobilenet_v2.preprocess_input(img))
+print(feature_map.shape)
 
+output_img = spatial_pooling_4x4(feature_map.numpy())
+print(output_img.shape)
 # Output 4 x 4 x 1280
 # Maybe add a single dense of 2048 neurons + softmax logits would do
