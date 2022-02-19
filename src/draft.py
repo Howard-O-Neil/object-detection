@@ -1,4 +1,4 @@
-import math
+import numpy as np
 
-
-print(math.floor(1.))
+print(np.arange(3, 6))
+print(2**np.arange(3, 6))

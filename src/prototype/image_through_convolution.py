@@ -7,18 +7,18 @@ import PIL
 
 img_dir = "/home/howard/project/object-detection/images/test/animal_4.jpg"
 
-perfect_size = 512  # (7*7)
+perfect_size = 14  # (7*7)
 
 img = tf.expand_dims(
     tf.cast(tf.convert_to_tensor(np.asarray(PIL.Image.open(img_dir))), tf.float32),
     axis=0,
 )
 
-img = tf.image.resize(img, [10, 10])
+img = tf.image.resize(img, [perfect_size, perfect_size])
 
 conv = keras.layers.Convolution2D(
     filters=256,
-    kernel_size=(3, 3),
+    kernel_size=(1, 1),
     strides=(1, 1),
     padding="valid",
     data_format=None,
