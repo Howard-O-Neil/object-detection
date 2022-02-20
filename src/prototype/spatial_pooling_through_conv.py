@@ -29,7 +29,7 @@ def spatial_pooling(img, bin_w, bin_h):
         pool_size=_pool_size_stride, strides=_pool_size_stride
     )
 
-    return max_pool(img)
+    return max_pool(pad_img)
 
 def construct_conv_model():
     model = keras.applications.MobileNetV2(
@@ -45,9 +45,9 @@ def construct_conv_model():
 
     return model
 
-img_dir = "/home/howard/project/object-detection/images/test/animal_3.jpg"
+img_dir = "/home/howard/project/object-detection/images/test/animal_2.jpg"
 
-perfect_size = 512  # (7*7)
+perfect_size = 512
 
 img = tf.expand_dims(
     tf.cast(tf.convert_to_tensor(np.asarray(PIL.Image.open(img_dir))), tf.float32),

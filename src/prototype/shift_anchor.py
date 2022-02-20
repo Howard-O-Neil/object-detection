@@ -3,8 +3,8 @@ import numpy as np
 
 input = gen_anchs()
 
-width = 4
-height = 5
+width = 16
+height = 23
 
 _feat_stride = 16
 
@@ -26,12 +26,19 @@ shifts = np.vstack((shift_x.ravel(), shift_y.ravel(),
 A = input.shape[0] # number of anchor
 K = shifts.shape[0] # number of shifts
 
-print(shifts)
-print(shifts.reshape((1, K, 4)))
-print(shifts.reshape((1, K, 4)).transpose((1, 0, 2)))
-all_anchors = (input.reshape((1, A, 4)) +
-                shifts.reshape((1, K, 4)).transpose((1, 0, 2)))
+all_anchors = np.add(
+    input.reshape((1, A, 4)),
+    shifts.reshape((1, K, 4)).transpose((1, 0, 2))
+)
 all_anchors = all_anchors.reshape((K * A, 4))
 
+max_distance_w_anchor = np.max(
+    np.max(all_anchors[:, [0, 2]], axis=1)
+)
+max_distance_h_anchor = np.max(
+    np.max(all_anchors[:, [1, 3]], axis=1)
+)
 
 print(all_anchors.shape)
+print(max_distance_w_anchor)
+print(max_distance_h_anchor)

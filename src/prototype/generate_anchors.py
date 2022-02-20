@@ -2,7 +2,7 @@ import numpy as np
 
 def generate_anchors(base_size=16, ratios=[0.5, 1, 2],
                      scales=2**np.arange(3, 6)):
-    # scales = [2^3, 2^4, 2^5] 
+    # scales = [2^3, 2^4, 2^5]
 
     """
     Generate anchor (reference) windows by enumerating aspect ratios X
@@ -51,9 +51,10 @@ def _ratio_enum(anchor, ratios):
     size = w * h
     
     # this is really smart formula!!!
-    # given w, h, ratio. Perform distributing values among new_w, new_h
-    #       following new_h/new_w = ratio
-    # ( sqrt(size_ratios) ) * ( sqrt(size_ratios) * ratios ) = size
+    # given w = 5, h = 5
+    # calculate ws, hs following
+    #       ws * hs = 5 * 5
+    #       hs / ws = ratio
     
     size_ratios = size / ratios
 
