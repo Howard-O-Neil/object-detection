@@ -5,7 +5,7 @@ from cmath import rect
 import os
 
 os.environ["dataset"] = "/home/howard/dataset/VOCdevkit/VOC2012"
-os.environ["dataset2"] = "/home/howard/project/object-detection/data/pascal_voc2012"
+os.environ["dataset2"] = "/home/howard/project/object-detection/data/pascal_voc2012/dataset_v2"
 
 import tensorflow as tf
 import numpy as np
@@ -16,18 +16,14 @@ import mylib.io_utils.VOC_2012 as io_voc_2012
 import mylib.bbox_utils as bbu
 
 # # Remove 1st col index
-x_DF = pd.read_csv(f"""{os.getenv("dataset2")}/bbox_X_MERGED.csv""")
-y_DF = pd.read_csv(f"""{os.getenv("dataset2")}/bbox_Y_MERGED.csv""")
-imgs_DF = pd.read_csv(f"""{os.getenv("dataset2")}/image_ID_MERGED.csv""")
+x_DF = pd.read_csv(f"""{os.getenv("dataset2")}/bbox_X_MERGED.csv""").to_numpy()[:, 1:]
+y_DF = pd.read_csv(f"""{os.getenv("dataset2")}/bbox_Y_MERGED.csv""").to_numpy()[:, 1:]
+imgs_DF = pd.read_csv(f"""{os.getenv("dataset2")}/image_ID_MERGED.csv""").to_numpy()[:, 1:]
 
 # batch_size = len(trainval_list) # construct dataset from full list
 batch_size = 25
 start_idx = 30
 trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[start_idx:start_idx+batch_size])
-
-x_DF = np.array(x_DF.values.tolist()).astype(np.float32)[:, 1:]
-y_DF = np.array(y_DF.values.tolist()).astype(np.float32)[:, 1:]
-imgs_DF = np.array(imgs_DF.values.tolist())[:, 1]
 
 from mpl_toolkits.axes_grid1 import ImageGrid
 
@@ -46,7 +42,7 @@ grid = fig.subplots(grid_row, grid_col)
 print("==========================")
 for i, ax in enumerate(fig.get_axes()):
     img_id = trainval_list[i]
-    filter_ids = np.where(imgs_DF == img_id, True, False)
+    filter_ids = np.squeeze(np.where(imgs_DF == img_id, True, False))    
     [imgs, _] = io_voc_2012.transform_imgs([img_id])
 
     ax.set_axis_off()

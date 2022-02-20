@@ -58,6 +58,9 @@ def calculate_iou(pred_box, gt_box):
     pred_box = np.ascontiguousarray(pred_box)
     gt_box = np.ascontiguousarray(gt_box)
 
+    # pred_box = np.asfortranarray(pred_box)
+    # gt_box = np.asfortranarray(gt_box)
+
     iou = np.max(raw_iou(pred_box, gt_box), axis=len(pred_box.shape) - 1)
 
     return iou
