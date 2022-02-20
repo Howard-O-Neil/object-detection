@@ -55,6 +55,8 @@ class IoU:
 raw_iou = np.frompyfunc(IoU(4).calculate, 2, 1)
 
 def calculate_iou(pred_box, gt_box):
+    pred_box = np.ascontiguousarray(pred_box)
+    gt_box = np.ascontiguousarray(gt_box)
 
     iou = np.max(raw_iou(pred_box, gt_box), axis=len(pred_box.shape) - 1)
 
@@ -105,6 +107,7 @@ def pair_bboxs_max(ss_res, gt, filter_rate=0.5):
 
     iou_per_gt = calculate_iou(expand_ss, expand_gt)
 
+    print(iou_per_gt)
     max_iou_each_region = np.max(iou_per_gt, axis=0)
     max_iou_region_id = np.argmax(iou_per_gt, axis=0)
 

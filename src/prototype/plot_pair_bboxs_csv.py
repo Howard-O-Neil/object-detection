@@ -1,32 +1,38 @@
+import sys
+sys.path.append("..")
+
+from cmath import rect
 import os
+
 os.environ["dataset"] = "/home/howard/dataset/VOCdevkit/VOC2012"
+os.environ["dataset2"] = "/home/howard/project/object-detection/data/pascal_voc2012"
 
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 import matplotlib.patches as mpatches
 import mylib.io_utils.VOC_2012 as io_voc_2012
 import mylib.bbox_utils as bbu
 
+# # Remove 1st col index
+x_DF = pd.read_csv(f"""{os.getenv("dataset2")}/bbox_X_MERGED.csv""")
+y_DF = pd.read_csv(f"""{os.getenv("dataset2")}/bbox_Y_MERGED.csv""")
+imgs_DF = pd.read_csv(f"""{os.getenv("dataset2")}/image_ID_MERGED.csv""")
 
 # batch_size = len(trainval_list) # construct dataset from full list
-batch_size = 25                    
+batch_size = 25
 start_idx = 30
-
 trainval_list = np.array(io_voc_2012.get_imgs_dataset("trainval")[start_idx:start_idx+batch_size])
-# trainval_list = np.array(["2007_001872", "2007_002896", "2007_006028", "2007_006254", "2007_007772"])
 
-[img_classes, img_bboxs] = io_voc_2012.get_bbox_annotations(trainval_list)
-[imgs, imgs_change_ratio] = io_voc_2012.transform_imgs(trainval_list)
-img_bboxs = io_voc_2012.scale_annotations(img_bboxs, imgs_change_ratio)
-
-# BELOW CODE IS PRETTY SLOW
+x_DF = np.array(x_DF.values.tolist()).astype(np.float32)[:, 1:]
+y_DF = np.array(y_DF.values.tolist()).astype(np.float32)[:, 1:]
+imgs_DF = np.array(imgs_DF.values.tolist())[:, 1]
 
 from mpl_toolkits.axes_grid1 import ImageGrid
 
 # plot canvas (DCI 2K) = (256 x 8, 135 x 8)
 fig = plt.figure(figsize=(256., 135.), dpi=8) 
-fig.tight_layout()
 
 grid_row = int(trainval_list.shape[0] / 5)
 grid_col = int(trainval_list.shape[0] / grid_row)
@@ -36,20 +42,22 @@ grid_col = int(trainval_list.shape[0] / grid_row)
 #                  )
 grid = fig.subplots(grid_row, grid_col)
 
+
 print("==========================")
 for i, ax in enumerate(fig.get_axes()):
-    ss_res = bbu.selective_search(imgs[i])
-    pairs = bbu.pair_bboxs_max(ss_res, img_bboxs[i])
+    img_id = trainval_list[i]
+    filter_ids = np.where(imgs_DF == img_id, True, False)
+    [imgs, _] = io_voc_2012.transform_imgs([img_id])
 
     ax.set_axis_off()
-    ax.autoscale_view('tight')
+
     # display image
     #       float   [0 ... 1]
     #       integer [0 ... 255]
-    ax.imshow(imgs[i])
+    ax.imshow(imgs[0])
 
-    rects_1 = pairs[:, 0]
-    rects_2 = pairs[:, 1]
+    rects_1 = x_DF[filter_ids]
+    rects_2 = y_DF[filter_ids]
 
     for k in range(rects_1.shape[0]):
         rect_reg = rects_1[k]
@@ -61,4 +69,4 @@ for i, ax in enumerate(fig.get_axes()):
         ax.add_patch(gt)
         ax.add_patch(reg)
 
-plt.savefig("../images/plot/test_pair_regions.png")
+plt.savefig("../images/plot/test_pair_regions_csv.png")
