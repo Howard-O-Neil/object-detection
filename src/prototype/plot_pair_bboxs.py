@@ -64,4 +64,4 @@ for i, ax in enumerate(fig.get_axes()):
         ax.add_patch(gt)
         ax.add_patch(reg)
 
-plt.savefig("../images/plot/test_pair_regions.png")
+plt.savefig("/home/howard/project/object-detection/images/plot/test_pair_regions.png")
