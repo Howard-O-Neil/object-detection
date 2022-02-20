@@ -31,7 +31,7 @@ img = rescale_img(img_dir)[0]
 print(f"Image width  : {img.shape[1]}")
 print(f"Image height : {img.shape[0]}")
 
-list_feat_stride = [8, 16, 32]
+list_feat_stride = [8, 16, 32, 32]
 
 def cal_anchors(_feat_stride):
 
@@ -39,8 +39,8 @@ def cal_anchors(_feat_stride):
 
     _conv_scale = 32
 
-    feature_w = img.shape[1] / _conv_scale
-    feature_h = img.shape[0] / _conv_scale
+    feature_w = math.floor(img.shape[1] / _conv_scale)
+    feature_h = math.floor(img.shape[0] / _conv_scale)
 
     print(f"Feature width  : {feature_w}")
     print(f"Feature height : {feature_h}")
@@ -92,9 +92,10 @@ grid = fig.subplots(2, 2)
 print("==========================")
 
 for i, ax in enumerate(fig.get_axes()):
-    if i == 3: break
+    # 384 * 9 anchors
+    all_anchors = cal_anchors(list_feat_stride[i]) 
 
-    all_anchors = cal_anchors(list_feat_stride[i])
+    print(f"Total anchors: {all_anchors.shape[0]}")
 
     ax.set_axis_off()
 
@@ -112,10 +113,29 @@ for i, ax in enumerate(fig.get_axes()):
             all_anchors[:, 3] - all_anchors[:, 1],
         ]).transpose()
 
-    for k in range(all_anchors.shape[0]):
-        reg = mpatches.Rectangle((anchor_plt[k][0], anchor_plt[k][1]), 5, 5, linewidth=10, edgecolor='g', facecolor="none")
-        # reg = mpatches.Rectangle((rects[k][0], rects[k][1]), rects[k][2], rects[k][3], linewidth=10, edgecolor='g', facecolor="none")
-        
-        ax.add_patch(reg)
+    if i == 3:
+        for idx in range(all_anchors.shape[0]):
+            # reg = mpatches.Rectangle((anchor_plt[k][0], anchor_plt[k][1]), 5, 5, linewidth=10, edgecolor='g', facecolor="none")
+
+            flag = 181 * 9
+
+            if idx >= flag:
+                for k in range(flag, flag+3):
+                    reg_g = mpatches.Rectangle((rects[k][0], rects[k][1]), rects[k][2], rects[k][3], linewidth=20, edgecolor='g', facecolor="none")
+                    ax.add_patch(reg_g)
+                for k in range(flag+3, flag+6):
+                    reg_b = mpatches.Rectangle((rects[k][0], rects[k][1]), rects[k][2], rects[k][3], linewidth=20, edgecolor='b', facecolor="none")
+                    ax.add_patch(reg_b)
+                for k in range(flag+6, flag+9):
+                    reg_r = mpatches.Rectangle((rects[k][0], rects[k][1]), rects[k][2], rects[k][3], linewidth=20, edgecolor='r', facecolor="none")
+                    ax.add_patch(reg_r)
+
+                break
+    else:
+        for k in range(all_anchors.shape[0]):
+            reg = mpatches.Rectangle((anchor_plt[k][0], anchor_plt[k][1]), 5, 5, linewidth=10, edgecolor='g', facecolor="none")
+            # reg = mpatches.Rectangle((rects[k][0], rects[k][1]), rects[k][2], rects[k][3], linewidth=10, edgecolor='g', facecolor="none")
+            
+            ax.add_patch(reg)
 
 plt.savefig("/home/howard/project/object-detection/images/plot/test_anchor_generate.png")
