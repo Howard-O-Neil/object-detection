@@ -11,3 +11,4 @@ ws = sqrt(512) = 22.627 -> round to int = 22
 hs = ws * ratio = 11
 
 hs / ws = 0.5 = 1:2 = ratio
+hs + ws = 33 ~ 16 + 16
