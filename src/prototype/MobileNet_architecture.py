@@ -13,3 +13,5 @@ model = keras.applications.MobileNetV2(
 )
 model.build((224, 224))
 print(model.summary())
+
+# Reduce size by 32
